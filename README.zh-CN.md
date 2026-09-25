@@ -12,7 +12,7 @@
 [![Chrome 商店 · 尚未上架](https://img.shields.io/badge/Chrome_商店-尚未上架-64748B?style=for-the-badge)](#chrome-商店)
 [![访问 PixOnDeck](https://img.shields.io/badge/访问-PixOnDeck-18181B?style=for-the-badge)](https://pixondeck.com/extension?utm_source=github&utm_medium=referral&utm_campaign=extension_open_source&utm_content=readme_zh_website)
 
-选取图片 → 反推提示词 → 编辑、收藏、继续创作。
+选取图片 → 反推提示词 → 一键带到 **ChatGPT 或 PixOnDeck** 生成。
 
 </div>
 
@@ -20,19 +20,33 @@
 
 [安装步骤](#手动安装) · [第一次反推](#开始第一次反推) · [更新与排错](#更新与常见问题) · [隐私说明](#隐私与权限) · [开发者说明](#开发者说明)
 
+## 图片反推示例
+
+人像、美妆产品、电商摄影：用真实图库照片展示实际反推结果。[查看完整提示词与图片来源](docs/examples/README.md)。
+
+<table>
+  <tr>
+    <td width="33%" valign="top"><strong>人像写真</strong><br><br><a href="docs/examples/README.md"><img src="docs/examples/portrait.png" width="240" alt="人像写真"></a></td>
+    <td width="33%" valign="top"><strong>香水产品</strong><br><br><a href="docs/examples/README.md"><img src="docs/examples/skincare.png" width="240" alt="香水产品"></a></td>
+    <td width="33%" valign="top"><strong>手表电商图</strong><br><br><a href="docs/examples/README.md"><img src="docs/examples/watch.png" width="240" alt="手表电商图"></a></td>
+  </tr>
+</table>
+
 ## 产品界面
 
-实际客户端界面，使用本地演示数据及手动编辑的示例提示词。截图用于展示操作界面，不代表模型效果或真实账号记录。点击图片可放大。
+实际客户端界面，回放上述图片的反推结果；账号和收藏使用本地演示状态。点击图片可放大。
 
 <table>
   <tr>
     <td width="33%" valign="top"><strong>编辑反推提示词</strong><br><br><a href="docs/screenshots/workspace.png"><img src="docs/screenshots/workspace.png" alt="编辑反推提示词" width="300"></a></td>
-    <td width="33%" valign="top"><strong>收藏提示词</strong><br><br><a href="docs/screenshots/saved-prompts.png"><img src="docs/screenshots/saved-prompts.png" alt="收藏提示词" width="300"></a></td>
-    <td width="33%" valign="top"><strong>配置自己的 API Key</strong><br><br><a href="docs/screenshots/byok-settings.png"><img src="docs/screenshots/byok-settings.png" alt="配置自己的 API Key" width="300"></a></td>
+    <td width="33%" valign="top"><strong>提示词收藏</strong><br><br><a href="docs/screenshots/saved-prompts.png"><img src="docs/screenshots/saved-prompts.png" alt="提示词收藏" width="300"></a></td>
+    <td width="33%" valign="top"><strong>BYOK</strong><br><br><a href="docs/screenshots/byok-settings.png"><img src="docs/screenshots/byok-settings.png" alt="BYOK" width="300"></a></td>
   </tr>
 </table>
 
-[查看简短演示动画](src/assets/welcome-demo.mp4) — 展示操作方式，不是模型效果实测录像。
+[![PixOnDeck 操作演示](docs/screenshots/walkthrough.gif)](src/assets/welcome-demo.mp4)
+
+*操作演示动图 · 点击查看 MP4。*
 
 ## 手动安装
 
@@ -65,7 +79,7 @@ PixOnDeck-extension/
 1. 打开 PixOnDeck 侧边栏并**登录账号**。目前积分模式和 BYOK 都需要登录。
 2. **上传图片**，或在普通网页使用图片入口、右键菜单选取图片。安装前已打开的网页需要先刷新。
 3. 在账号菜单里**选择处理模式**，然后开始反推。
-4. **编辑结果**，再复制、收藏，或使用可用的生成入口。
+4. **编辑结果**，收藏提示词，或点击 **Generate**，一键带到 **ChatGPT 或 PixOnDeck** 继续生成。在目标页面确认生成即可；超长 ChatGPT 提示词会复制到剪贴板，供粘贴使用。
 
 | 模式 | 需要准备 | 费用 |
 | --- | --- | --- |
@@ -79,9 +93,10 @@ BYOK 在账号菜单里配置。反推结果是 AI 对图片的理解，不能�
 | 功能 | 用途 |
 | --- | --- |
 | 网页取图 | 看到参考图片就能开始反推 |
+| 一键去 ChatGPT / PixOnDeck 生成 | 带着编辑后的提示词和图片比例，直接继续创作 |
 | 可编辑提示词 | 按自己的创作需求调整结果 |
 | BYOK | 使用自己选择的兼容视觉模型供应商 |
-| 最近任务与云收藏 | 回看近期结果，保留有用的提示词 |
+| 最近任务与提示词收藏 | 回看近期结果，保留有用的提示词 |
 | 客户端开源 | 查看图片处理、权限与请求逻辑 |
 
 ## Chrome 商店

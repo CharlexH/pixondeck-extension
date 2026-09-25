@@ -1,0 +1,44 @@
+[
+  {
+    "id": "portrait",
+    "title": "Outdoor portrait photography",
+    "image": "portrait.png",
+    "originalWidth": 960,
+    "originalHeight": 640,
+    "prompt": "Landscape-oriented close-up portrait of a young woman outdoors in a leafy park, photographed at eye level with a natural 50mm-style perspective. She stands left of center in a three-quarter back pose, bare shoulder nearest the camera, turning her head to look directly into the lens. Long wavy brown hair falls over her back and shoulder; she wears a rust-orange sleeveless top and a small pearl stud earring. Her face and shoulder are sharply focused while the background is softly blurred. A paved path recedes behind her toward the right, bordered by grass, large dark tree trunks and dense green canopies; a fence and sidewalk appear along the left, with indistinct park structures in the distance. Strong warm sunlight strikes her face and shoulder from the front-left, creating bright skin highlights and defined shadows, while the path is patterned with tree shade. Natural colors, shallow depth of field, candid cinematic photography.",
+    "model": "openai/gpt-5.6-sol",
+    "promptVersion": "reverse-v1",
+    "source": "https://stocksnap.io/photo/woman-portrait-ZG1SST226T",
+    "photographer": "Matt Moloney",
+    "license": "CC0-1.0",
+    "downloadedRendition": "https://cdn.stocksnap.io/img-thumbs/960w/woman-portrait_ZG1SST226T.jpg"
+  },
+  {
+    "id": "skincare",
+    "title": "Perfume product photography",
+    "image": "skincare.png",
+    "originalWidth": 960,
+    "originalHeight": 638,
+    "prompt": "Landscape-oriented minimalist product photograph of a single square glass perfume bottle, viewed from a slightly elevated front angle and positioned just left of center on a smooth pale blush-beige surface. The transparent faceted bottle contains peach-pink liquid and has a thick patterned glass base. A rectangular cream label with a fine border and delicate cursive writing is centered on the front. A large clear geometric crystal cap with silver-toned inner fittings sits on top; a small black ribbon with a warm tan underside is tied around the neck and extends to the right. Strong warm light from the upper left creates bright highlights, refracted patterns around the base, and a long soft-edged dark shadow stretching diagonally toward the lower right foreground. Spacious off-white background with a subtle pink gradient, shallow depth of field, refined luxury cosmetics advertising style, clean composition, no other objects.",
+    "model": "openai/gpt-5.6-sol",
+    "promptVersion": "reverse-v1",
+    "source": "https://stocksnap.io/photo/perfume-bottle-0BZ1W3NNQK",
+    "photographer": "Jessica Weiller",
+    "license": "CC0-1.0",
+    "downloadedRendition": "https://cdn.stocksnap.io/img-thumbs/960w/perfume-bottle_0BZ1W3NNQK.jpg"
+  },
+  {
+    "id": "watch",
+    "title": "Smartwatch product photography",
+    "image": "watch.png",
+    "originalWidth": 960,
+    "originalHeight": 635,
+    "prompt": "Product photograph of a silver rectangular smartwatch centered on a glossy dark gray reflective tabletop, viewed straight on from a low, slightly elevated angle in landscape orientation. The watch stands upright with its woven silver mesh band curving backward into a loop; the left band segment is darker in shadow and a small clasp or loose end rises behind it. The polished metal watch case and black screen face the camera, displaying large white digital numerals “10” above “53,” rotated sideways relative to the frame, with small interface marks near the right edge. A clear inverted reflection of the illuminated face and mesh band appears directly below, partially cropped by the lower frame. Shallow depth of field, softly blurred gray background with horizontal tonal bands, dim studio lighting, cool neutral palette, subtle highlights on brushed metal and polished glass, minimalist commercial product photography.",
+    "model": "openai/gpt-5.6-sol",
+    "promptVersion": "reverse-v1",
+    "source": "https://stocksnap.io/photo/silver-watch-4F9UDG0I8Q",
+    "photographer": "Jens Kreuter",
+    "license": "CC0-1.0",
+    "downloadedRendition": "https://cdn.stocksnap.io/img-thumbs/960w/silver-watch_4F9UDG0I8Q.jpg"
+  }
+]

@@ -12,7 +12,7 @@
 [![Chrome Web Store — coming soon](https://img.shields.io/badge/Chrome_Web_Store-Coming_soon-64748B?style=for-the-badge)](#chrome-web-store)
 [![Website](https://img.shields.io/badge/Visit-PixOnDeck-18181B?style=for-the-badge)](https://pixondeck.com/extension?utm_source=github&utm_medium=referral&utm_campaign=extension_open_source&utm_content=readme_website)
 
-Pick an image → Get a prompt → Edit, save, or keep creating.
+Pick an image → Get a prompt → Generate in **ChatGPT or PixOnDeck**.
 
 </div>
 
@@ -20,19 +20,33 @@ Pick an image → Get a prompt → Edit, save, or keep creating.
 
 [Installation](#manual-installation) · [First prompt](#create-your-first-prompt) · [Updates & help](#updates-and-troubleshooting) · [Privacy](#privacy-and-permissions) · [Developers](#for-developers)
 
+## Image-to-prompt examples
+
+Portraits, beauty products, and ecommerce photography. Real stock photos with actual image-to-prompt outputs. [View full prompts and photo credits](docs/examples/README.md).
+
+<table>
+  <tr>
+    <td width="33%" valign="top"><strong>Portrait</strong><br><br><a href="docs/examples/README.md"><img src="docs/examples/portrait.png" width="240" alt="Portrait"></a></td>
+    <td width="33%" valign="top"><strong>Perfume</strong><br><br><a href="docs/examples/README.md"><img src="docs/examples/skincare.png" width="240" alt="Perfume"></a></td>
+    <td width="33%" valign="top"><strong>Watch</strong><br><br><a href="docs/examples/README.md"><img src="docs/examples/watch.png" width="240" alt="Watch"></a></td>
+  </tr>
+</table>
+
 ## Product screenshots
 
-Actual client UI with local demo data and an edited sample prompt. These screenshots illustrate the interface, not model quality or real account activity. Click an image to enlarge.
+Actual client UI replaying the example prompts above. Account and favorites are local demo states. Click an image to enlarge.
 
 <table>
   <tr>
     <td width="33%" valign="top"><strong>Edit a prompt</strong><br><br><a href="docs/screenshots/workspace.png"><img src="docs/screenshots/workspace.png" alt="Edit a prompt" width="300"></a></td>
-    <td width="33%" valign="top"><strong>Saved prompts</strong><br><br><a href="docs/screenshots/saved-prompts.png"><img src="docs/screenshots/saved-prompts.png" alt="Saved prompts" width="300"></a></td>
-    <td width="33%" valign="top"><strong>Bring your own API key</strong><br><br><a href="docs/screenshots/byok-settings.png"><img src="docs/screenshots/byok-settings.png" alt="Bring your own API key" width="300"></a></td>
+    <td width="33%" valign="top"><strong>Prompt favorites</strong><br><br><a href="docs/screenshots/saved-prompts.png"><img src="docs/screenshots/saved-prompts.png" alt="Prompt favorites" width="300"></a></td>
+    <td width="33%" valign="top"><strong>BYOK</strong><br><br><a href="docs/screenshots/byok-settings.png"><img src="docs/screenshots/byok-settings.png" alt="BYOK" width="300"></a></td>
   </tr>
 </table>
 
-[Watch the short walkthrough](src/assets/welcome-demo.mp4) — an illustrated interaction, not a recorded model benchmark.
+[![PixOnDeck workflow demo](docs/screenshots/walkthrough.gif)](src/assets/welcome-demo.mp4)
+
+*Workflow animation · Click to view the MP4.*
 
 ## Manual installation
 
@@ -65,7 +79,7 @@ These steps follow [Chrome’s official unpacked-extension guide](https://develo
 1. Open the PixOnDeck side panel and **sign in**. Both processing modes currently require a PixOnDeck account.
 2. **Upload an image**, or select an image on a normal webpage using its image action or right-click menu. Refresh pages that were already open before installation.
 3. **Choose a mode** in the account menu and start the task.
-4. **Edit the result**, then copy it, save it, or use an available generation action.
+4. **Edit the result**, add it to your favorites, or click **Generate** to bring the prompt into **ChatGPT or PixOnDeck** and continue creating. Confirm generation in the destination app; very long ChatGPT prompts are copied for pasting.
 
 | Mode | What you need | Billing |
 | --- | --- | --- |
@@ -79,9 +93,10 @@ BYOK settings are in the account menu. An image-to-prompt result is an AI interp
 | Feature | What it helps you do |
 | --- | --- |
 | Web image capture | Start from a reference without leaving the page |
+| Generate in ChatGPT or PixOnDeck | Bring your edited prompt and aspect ratio into your next creation with one click |
 | Editable prompts | Adjust the result to suit your next idea |
 | BYOK support | Use a compatible vision provider of your choice |
-| Recent tasks and cloud favorites | Revisit your work and keep useful prompts |
+| Recent tasks and prompt favorites | Revisit your work and keep useful prompts |
 | Open client source | Inspect image preparation, permissions and request handling |
 
 ## Chrome Web Store

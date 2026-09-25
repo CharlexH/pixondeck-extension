@@ -10,3 +10,7 @@ redistributing and documenting this client. They are not licensed as a standalon
 stock-media or branding collection. Modified public distributions should use a
 name and visual identity that clearly distinguish them from the official product.
 This policy does not add restrictions to the Apache-licensed source code.
+
+The stock photographs under `docs/examples/` retain their CC0 dedication;
+see [photo credits and provenance](docs/examples/README.md). The PixOnDeck
+branding policy does not apply to those third-party photographs.
