@@ -20,7 +20,17 @@
 
 [安装步骤](#手动安装) · [第一次反推](#开始第一次反推) · [更新与排错](#更新与常见问题) · [隐私说明](#隐私与权限) · [开发者说明](#开发者说明)
 
-![图片转提示词交互示意](src/assets/welcome-demo-poster.jpg)
+## 产品界面
+
+实际客户端界面，使用本地演示数据及手动编辑的示例提示词。截图用于展示操作界面，不代表模型效果或真实账号记录。点击图片可放大。
+
+<table>
+  <tr>
+    <td width="33%" valign="top"><strong>编辑反推提示词</strong><br><br><a href="docs/screenshots/workspace.png"><img src="docs/screenshots/workspace.png" alt="编辑反推提示词" width="300"></a></td>
+    <td width="33%" valign="top"><strong>收藏提示词</strong><br><br><a href="docs/screenshots/saved-prompts.png"><img src="docs/screenshots/saved-prompts.png" alt="收藏提示词" width="300"></a></td>
+    <td width="33%" valign="top"><strong>配置自己的 API Key</strong><br><br><a href="docs/screenshots/byok-settings.png"><img src="docs/screenshots/byok-settings.png" alt="配置自己的 API Key" width="300"></a></td>
+  </tr>
+</table>
 
 [查看简短演示动画](src/assets/welcome-demo.mp4) — 展示操作方式，不是模型效果实测录像。
 

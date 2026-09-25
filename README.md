@@ -20,7 +20,17 @@ Pick an image → Get a prompt → Edit, save, or keep creating.
 
 [Installation](#manual-installation) · [First prompt](#create-your-first-prompt) · [Updates & help](#updates-and-troubleshooting) · [Privacy](#privacy-and-permissions) · [Developers](#for-developers)
 
-![Image-to-prompt interaction illustration](src/assets/welcome-demo-poster.jpg)
+## Product screenshots
+
+Actual client UI with local demo data and an edited sample prompt. These screenshots illustrate the interface, not model quality or real account activity. Click an image to enlarge.
+
+<table>
+  <tr>
+    <td width="33%" valign="top"><strong>Edit a prompt</strong><br><br><a href="docs/screenshots/workspace.png"><img src="docs/screenshots/workspace.png" alt="Edit a prompt" width="300"></a></td>
+    <td width="33%" valign="top"><strong>Saved prompts</strong><br><br><a href="docs/screenshots/saved-prompts.png"><img src="docs/screenshots/saved-prompts.png" alt="Saved prompts" width="300"></a></td>
+    <td width="33%" valign="top"><strong>Bring your own API key</strong><br><br><a href="docs/screenshots/byok-settings.png"><img src="docs/screenshots/byok-settings.png" alt="Bring your own API key" width="300"></a></td>
+  </tr>
+</table>
 
 [Watch the short walkthrough](src/assets/welcome-demo.mp4) — an illustrated interaction, not a recorded model benchmark.
 
