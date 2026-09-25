@@ -2,7 +2,7 @@
 
 ## Standalone build and fixtures
 
-`npm ci`, `npm run typecheck`, `npm test`, and `npm run build` run inside this repository without a website checkout. Tests depend on the pinned Clerk package layout. A build with empty auth configuration produces a shell, not a usable hosted account connection.
+`npm ci`, `npm run typecheck`, `npm test`, and `npm run build` run inside this repository without a website checkout. Tests depend on the pinned Clerk package layout. The committed `.npmrc` preserves the lockfile peer-resolution settings: optional React/wallet UI peers are not auto-installed, and the unused Clerk UI entry is replaced by a fail-fast build stub. A build with empty auth configuration produces a shell, not a usable hosted account connection.
 
 `npm run preview` starts local fixtures at port 8791. Preview images use the bundled project icon instead of private website examples. Login, tasks, saved prompts and provider responses are simulated. Do not use real credentials in fixtures.
 
