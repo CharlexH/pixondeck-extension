@@ -38,9 +38,9 @@
 
 <table>
   <tr>
-    <td width="33%" valign="top"><strong>编辑反推提示词</strong><br><br><a href="docs/screenshots/workspace.png"><img src="docs/screenshots/workspace.png" alt="编辑反推提示词" width="300"></a></td>
-    <td width="33%" valign="top"><strong>提示词收藏</strong><br><br><a href="docs/screenshots/saved-prompts.png"><img src="docs/screenshots/saved-prompts.png" alt="提示词收藏" width="300"></a></td>
-    <td width="33%" valign="top"><strong>BYOK</strong><br><br><a href="docs/screenshots/byok-settings.png"><img src="docs/screenshots/byok-settings.png" alt="BYOK" width="300"></a></td>
+    <td width="33%" valign="top"><strong>编辑反推提示词</strong><br><br><a href="docs/screenshots/portrait-workspace.png"><img src="docs/screenshots/portrait-workspace.png" alt="编辑反推提示词" width="300"></a></td>
+    <td width="33%" valign="top"><strong>提示词收藏</strong><br><br><a href="docs/screenshots/prompt-favorites.png"><img src="docs/screenshots/prompt-favorites.png" alt="提示词收藏" width="300"></a></td>
+    <td width="33%" valign="top"><strong>BYOK</strong><br><br><a href="docs/screenshots/byok.png"><img src="docs/screenshots/byok.png" alt="BYOK" width="300"></a></td>
   </tr>
 </table>
 

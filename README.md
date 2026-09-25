@@ -38,9 +38,9 @@ Actual client UI replaying the example prompts above. Account and favorites are 
 
 <table>
   <tr>
-    <td width="33%" valign="top"><strong>Edit a prompt</strong><br><br><a href="docs/screenshots/workspace.png"><img src="docs/screenshots/workspace.png" alt="Edit a prompt" width="300"></a></td>
-    <td width="33%" valign="top"><strong>Prompt favorites</strong><br><br><a href="docs/screenshots/saved-prompts.png"><img src="docs/screenshots/saved-prompts.png" alt="Prompt favorites" width="300"></a></td>
-    <td width="33%" valign="top"><strong>BYOK</strong><br><br><a href="docs/screenshots/byok-settings.png"><img src="docs/screenshots/byok-settings.png" alt="BYOK" width="300"></a></td>
+    <td width="33%" valign="top"><strong>Edit a prompt</strong><br><br><a href="docs/screenshots/portrait-workspace.png"><img src="docs/screenshots/portrait-workspace.png" alt="Edit a prompt" width="300"></a></td>
+    <td width="33%" valign="top"><strong>Prompt favorites</strong><br><br><a href="docs/screenshots/prompt-favorites.png"><img src="docs/screenshots/prompt-favorites.png" alt="Prompt favorites" width="300"></a></td>
+    <td width="33%" valign="top"><strong>BYOK</strong><br><br><a href="docs/screenshots/byok.png"><img src="docs/screenshots/byok.png" alt="BYOK" width="300"></a></td>
   </tr>
 </table>
 
