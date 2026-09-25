@@ -1,49 +1,114 @@
+<div align="center">
+
+<img src="assets/icon.png" width="80" alt="PixOnDeck logo">
+
 # PixOnDeck — Image to Prompt
 
-An open-source Chrome extension that turns images from the web into editable AI prompts.
-Use PixOnDeck credits or connect your own compatible vision API provider.
+**Turn images you find on the web into editable AI prompts.**
 
-**[Get PixOnDeck for Chrome](https://pixondeck.com/extension?utm_source=github&utm_medium=referral&utm_campaign=extension_open_source&utm_content=readme_install)** · [Visit PixOnDeck](https://pixondeck.com?utm_source=github&utm_medium=referral&utm_campaign=extension_open_source&utm_content=readme_website) · [简体中文](README.zh-CN.md)
+**English** · [简体中文](README.zh-CN.md)
 
-![Illustration of turning a reference image into a prompt](src/assets/welcome-demo-poster.jpg)
+[![Download ZIP](https://img.shields.io/badge/Download_ZIP-Manual_install-6D4AFF?style=for-the-badge)](https://github.com/CharlexH/pixondeck-extension/releases/download/v1.0.1/pixondeck-chrome-1.0.1-manual-install.zip)
+[![Chrome Web Store — coming soon](https://img.shields.io/badge/Chrome_Web_Store-Coming_soon-64748B?style=for-the-badge)](#chrome-web-store)
+[![Website](https://img.shields.io/badge/Visit-PixOnDeck-18181B?style=for-the-badge)](https://pixondeck.com/extension?utm_source=github&utm_medium=referral&utm_campaign=extension_open_source&utm_content=readme_website)
 
-[Watch the short illustrated walkthrough](src/assets/welcome-demo.mp4). This animation explains the interaction; it is not a recorded model benchmark.
+Pick an image → Get a prompt → Edit, save, or keep creating.
 
-## From inspiration to a prompt you can use
+</div>
 
-- **Capture a reference:** select a webpage image using its image action or context menu, or upload a local image.
-- **Make it yours:** review and edit the AI-generated prompt, then copy it or continue with supported generation actions.
-- **Choose your provider:** use PixOnDeck credits or bring an API key for an OpenAI-compatible vision endpoint.
-- **Keep useful results:** revisit recent local tasks and save prompts to your PixOnDeck account.
-- **Inspect the client:** image preparation, browser permissions and BYOK request handling are available in this repository.
+> **Install manually for now.** The Chrome Web Store version is not available yet. Download the prepared ZIP above; no Node.js, terminal or build step is required.
 
-An image-to-prompt result is an AI interpretation of the image, not recovery of its original prompt. Results and provider compatibility vary.
+[Installation](#manual-installation) · [First prompt](#create-your-first-prompt) · [Updates & help](#updates-and-troubleshooting) · [Privacy](#privacy-and-permissions) · [Developers](#for-developers)
 
-## Get started
+![Image-to-prompt interaction illustration](src/assets/welcome-demo-poster.jpg)
 
-1. Open the [official extension page](https://pixondeck.com/extension?utm_source=github&utm_medium=referral&utm_campaign=extension_open_source&utm_content=get_started) for current installation availability and instructions.
-2. Sign in with your PixOnDeck account. Both credit mode and BYOK currently require an account.
-3. Select or upload an image, choose your mode, and start an image-to-prompt task.
-4. Edit the result, copy it, or use the available save and generation actions.
+[Watch the short walkthrough](src/assets/welcome-demo.mp4) — an illustrated interaction, not a recorded model benchmark.
 
-| Mode | Processing | Cost |
+## Manual installation
+
+Requires desktop **Chrome 116 or later**. Managed work or school browsers may restrict developer-mode installation.
+
+1. **[Download the manual-install ZIP](https://github.com/CharlexH/pixondeck-extension/releases/download/v1.0.1/pixondeck-chrome-1.0.1-manual-install.zip).** Choose `pixondeck-chrome-1.0.1-manual-install.zip`, not GitHub’s automatic **Source code** downloads.
+2. **Extract it into a permanent folder**, such as `Documents/PixOnDeck-extension`. Keep that folder after installation.
+3. **Open Chrome’s extension manager.** Paste `chrome://extensions` into the address bar.
+4. **Turn on Developer mode** in the upper-right corner.
+5. **Click “Load unpacked”** and select the extracted folder containing `manifest.json`.
+6. **Pin PixOnDeck** from Chrome’s puzzle-piece Extensions menu, then click its icon to open the side panel.
+
+The folder you select should look like this:
+
+```text
+PixOnDeck-extension/
+├── manifest.json    ← select this folder
+├── panel.html
+├── panel.js
+├── background.js
+└── ...
+```
+
+**Installation check:** the extension ID should be `abghgbjbefmiakmklkkoabgbeengkkgd`. The supplied package includes the official public identity and service configuration. If the ID differs, check that you downloaded the manual-install asset and did not edit `manifest.json`.
+
+These steps follow [Chrome’s official unpacked-extension guide](https://developer.chrome.com/docs/extensions/get-started/tutorial/hello-world#load-unpacked).
+
+## Create your first prompt
+
+1. Open the PixOnDeck side panel and **sign in**. Both processing modes currently require a PixOnDeck account.
+2. **Upload an image**, or select an image on a normal webpage using its image action or right-click menu. Refresh pages that were already open before installation.
+3. **Choose a mode** in the account menu and start the task.
+4. **Edit the result**, then copy it, save it, or use an available generation action.
+
+| Mode | What you need | Billing |
 | --- | --- | --- |
-| PixOnDeck | Prepared image goes to the PixOnDeck service and its processing providers | Uses PixOnDeck credits; check current product pricing |
-| BYOK | Prepared image goes directly to your configured HTTPS provider | Your provider may charge; a compatible image-input model is required |
+| **PixOnDeck credits** | A PixOnDeck account with available credits | Uses PixOnDeck credits |
+| **Your API key (BYOK)** | A trusted HTTPS provider, API key and OpenAI-compatible image-input model | Your provider may charge |
 
-Open-source code does not mean unlimited free AI processing. Website image generation is a separate, user-initiated action. This source snapshot can be newer than the published store build; check official availability before relying on a feature.
+BYOK settings are in the account menu. An image-to-prompt result is an AI interpretation, not recovery of the image’s original prompt. Website image generation is a separate, user-initiated action.
+
+## Why PixOnDeck?
+
+| Feature | What it helps you do |
+| --- | --- |
+| Web image capture | Start from a reference without leaving the page |
+| Editable prompts | Adjust the result to suit your next idea |
+| BYOK support | Use a compatible vision provider of your choice |
+| Recent tasks and cloud favorites | Revisit your work and keep useful prompts |
+| Open client source | Inspect image preparation, permissions and request handling |
+
+## Chrome Web Store
+
+**Coming soon — not publicly available yet.** The button above points here until a public listing is available. Use the manual-install ZIP in the meantime. Check the [official extension page](https://pixondeck.com/extension?utm_source=github&utm_medium=referral&utm_campaign=extension_open_source&utm_content=store_status) for product updates.
+
+## Updates and troubleshooting
+
+Manual installations **do not update automatically**. Download the next manual-install ZIP from [Releases](https://github.com/CharlexH/pixondeck-extension/releases), replace the contents of the same installation folder, and click **Reload** on the extension’s card at `chrome://extensions`. Then refresh webpages using the image action. Avoid removing the extension just to update it; removal can clear local data. Reloading also clears the session-only BYOK key, so enter it again if needed.
+
+| Problem | Try this |
+| --- | --- |
+| “Manifest file is missing or unreadable” | Extract the ZIP first and select the folder that directly contains `manifest.json` |
+| No image action on the page | Refresh the webpage, check Chrome site-access permission, or use local upload |
+| Chrome internal pages, the store, canvas or CSS backgrounds | Use local upload; these are not supported capture surfaces |
+| Sign-in does not appear in the panel | Finish website sign-in, close and reopen the panel, and verify the extension ID above |
+| BYOK request fails | Check the URL, key, model image support and provider balance |
+| Developer mode is unavailable | Your browser administrator may restrict unpacked extensions |
+
+Still stuck? [Report a reproducible issue](https://github.com/CharlexH/pixondeck-extension/issues). Never include API keys, tokens or private images. Account or billing help: [hello@pixondeck.com](mailto:hello@pixondeck.com).
 
 ## Privacy and permissions
 
-Only selected images are submitted for analysis. The client reduces images to a maximum 480-pixel edge before sending them for image-to-prompt processing. BYOK credentials are stored in trusted extension session storage and are sent to the configured provider, not to PixOnDeck. Cloud-saved prompts and thumbnails are sent to PixOnDeck when you choose to save them.
+- Only selected images are submitted for analysis. The client reduces image-to-prompt inputs to a maximum **480-pixel edge**.
+- Credit-mode images go to PixOnDeck and its processing providers. BYOK images and credentials go directly to your configured provider.
+- BYOK keys remain in trusted **extension session storage**, not persistent settings or PixOnDeck requests.
+- Saving a cloud favorite sends its prompt and thumbnail to your PixOnDeck account.
+- Webpage access enables capture, cookies support shared sign-in, and storage holds settings/history. The client does not implement browsing-history collection.
 
-The extension uses webpage access for image selection, cookies for shared sign-in, storage for settings/history, and side-panel/context-menu APIs for the interface. It does not implement browsing-history collection. It is not an entirely offline tool.
+Read the [data-flow and permissions guide](docs/privacy.md) and [official privacy policy](https://pixondeck.com/en/privacy). AI processing is online and may cost credits or provider fees.
 
-Read [the client data-flow and permissions guide](docs/privacy.md) and the [official privacy policy](https://pixondeck.com/en/privacy).
+## For developers
 
-## Build from source
+<details>
+<summary><strong>Build from source or run the fixture preview</strong></summary>
 
-Requires **Node.js 22.18+** and **Chrome 116+**.
+Requires Node.js 22.18+. Ordinary users should use the prepared ZIP above.
 
 ```sh
 git clone https://github.com/CharlexH/pixondeck-extension.git
@@ -55,28 +120,16 @@ npm test
 npm run build
 ```
 
-Open `chrome://extensions`, enable Developer mode, and load `dist/` as an unpacked extension. The first build generates a local public development identity in ignored `development-key.json`.
+Load `dist/` at `chrome://extensions`. Unlike the official manual-install package, the default source build creates a local development identity and has no live authentication configuration. A successful build alone does not grant access to production services. See [development and service requirements](docs/development.md).
 
-**A successful build is not a working account/backend configuration.** Empty configuration builds the interface shell. Real sign-in and requests need a matching Clerk environment, API endpoints and authorization of the exact extension origin. This repository does not include the PixOnDeck backend or grant access to production services for arbitrary extension identities. See [development and service requirements](docs/development.md).
+`npm run preview` starts the fixture interface at `http://127.0.0.1:8791`. It uses simulated data; use dummy keys only.
 
-For a fixture-based interface preview without credentials:
+</details>
 
-```sh
-npm run preview
-```
+[Contribution guide](CONTRIBUTING.md) · [Roadmap](docs/roadmap.md) · [Security reports](SECURITY.md)
 
-Open `http://127.0.0.1:8791`. Preview data and provider responses are simulated; use dummy keys only. This is not real AI processing or browser-extension acceptance.
+## Support and license
 
-## Feedback and support
+If PixOnDeck helps your workflow, **star this repository** to help others discover it.
 
-Found a reproducible bug? [Open an issue](https://github.com/CharlexH/pixondeck-extension/issues). Never include API keys, account tokens or private images. For account or billing help, contact [hello@pixondeck.com](mailto:hello@pixondeck.com).
-
-If PixOnDeck helps your workflow, a GitHub star helps others discover the project.
-
-Small fixes, documentation improvements and reproducible compatibility reports are welcome. See [CONTRIBUTING.md](CONTRIBUTING.md). Current priorities are reliable image capture, clearer setup and provider compatibility; see the [roadmap](docs/roadmap.md).
-
-## License
-
-Original code and documentation are licensed under [Apache-2.0](LICENSE), with attribution in [NOTICE](NOTICE). Third-party dependencies retain their own licenses; see [THIRD_PARTY_NOTICES.txt](THIRD_PARTY_NOTICES.txt). See [BRANDING.md](BRANDING.md) for branding and media permissions.
-
-This is the official PixOnDeck extension client. The hosted service, billing and backend are not part of this repository.
+Original code and documentation: [Apache-2.0](LICENSE) with [NOTICE](NOTICE). Dependencies retain their [own licenses](THIRD_PARTY_NOTICES.txt); visual assets are covered by [BRANDING.md](BRANDING.md). The hosted backend and billing service are not included.
