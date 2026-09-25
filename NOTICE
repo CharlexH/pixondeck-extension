@@ -1,0 +1,11 @@
+PixOnDeck — Image to Prompt
+Copyright 2026 CharlexH (PixOnDeck)
+
+Project: https://github.com/CharlexH/pixondeck-extension
+Website: https://pixondeck.com
+
+This distribution contains the PixOnDeck Chrome extension client.
+Original project source is licensed under the Apache License, Version 2.0.
+Third-party components retain their own licenses; see THIRD_PARTY_NOTICES.txt.
+The Apache license does not grant rights to use PixOnDeck trademarks except
+as stated in that license. See BRANDING.md for the scope of visual assets.

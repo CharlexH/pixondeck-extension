@@ -1,0 +1,12 @@
+node_modules/
+dist/
+dist-production/
+artifacts/
+.env
+.env.*
+!.env.example
+!.env.production.example
+development-key.json
+*.pem
+*.key
+.DS_Store

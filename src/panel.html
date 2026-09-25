@@ -1,0 +1,177 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>PixOnDeck</title>
+    <link rel="stylesheet" href="panel.css" />
+  </head>
+  <body class="auth-pending" aria-busy="true">
+    <div class="startup-loading" role="status"><span class="loading-spinner" aria-hidden="true"></span><span id="startupLabel"></span></div>
+    <section id="welcome" class="welcome" aria-labelledby="welcomeTitle" hidden>
+      <div class="welcome-content">
+        <img class="welcome-logo" src="logo.svg" alt="PixOnDeck" width="158" height="40">
+        <div class="welcome-demo">
+          <video id="welcomeDemo" autoplay muted loop playsinline preload="metadata" poster="assets/welcome-demo-poster.jpg" width="560" height="320">
+            <source src="assets/welcome-demo.mp4" type="video/mp4">
+          </video>
+        </div>
+        <h1 id="welcomeTitle"></h1>
+        <p id="welcomeDescription"></p>
+        <button id="login" class="welcome-login"></button>
+        <p id="guestStatus" role="status" aria-live="polite" hidden></p>
+      </div>
+    </section>
+    <header>
+      <a class="brand-row" href="https://pixondeck.com/" target="_blank" rel="noopener noreferrer" aria-label="PixOnDeck">
+        <img
+          class="brand-logo"
+          src="logo.svg"
+          alt="PixOnDeck"
+          width="95"
+          height="24"
+        />
+      </a>
+
+      <div class="upload-entry"><span id="uploadHint" class="upload-hint"></span><button id="uploadButton" class="upload-button"></button></div>
+      <button id="favoritesToggle" class="favorites-toggle" type="button" aria-pressed="false"><span id="favoritesIcon" aria-hidden="true"></span><span id="favoritesLabel"></span><span id="favoritesCount">0</span></button>
+      <input
+        id="upload"
+        type="file"
+        accept="image/jpeg,image/png,image/webp,image/gif"
+        hidden
+      />
+    </header>
+    <section id="accountMenu" class="account-menu" role="dialog" aria-labelledby="menuName" hidden>
+      <div class="menu-profile"><span class="menu-avatar"><img id="menuAvatar" alt="" referrerpolicy="no-referrer" hidden><span id="menuFallback"></span></span><div class="menu-profile-text"><strong id="menuName"></strong><span id="menuEmail"></span></div></div>
+      <div class="mode-options" role="group" aria-labelledby="modeLabel"><span id="modeLabel"><svg aria-hidden="true" viewBox="0 0 24 24" width="16" height="16"><g fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linejoin="round" d="M2.5 12c0-4.478 0-6.718 1.391-8.109S7.521 2.5 12 2.5c4.478 0 6.718 0 8.109 1.391S21.5 7.521 21.5 12c0 4.478 0 6.718-1.391 8.109S16.479 21.5 12 21.5c-4.478 0-6.718 0-8.109-1.391S2.5 16.479 2.5 12Z"/><path d="M10 15.5a1.5 1.5 0 1 1-3 0a1.5 1.5 0 0 1 3 0Zm7-7a1.5 1.5 0 1 0-3 0a1.5 1.5 0 0 0 3 0Z"/><path stroke-linecap="round" d="M8.5 14V7m7 3v7"/></g></svg><span id="modeLabelText"></span></span><button id="modeCredits" type="button" aria-pressed="true"><span class="mode-brand-mark"><img src="logo.svg" alt="PixOnDeck" width="79" height="20"></span></button><button id="modeByok" type="button" aria-pressed="false">BYOK</button></div>
+      <button id="byokConfigure" class="account-menu-link" type="button" hidden></button>
+      <a id="menuCredits" class="account-menu-link" target="_blank" rel="noopener noreferrer"><span class="menu-icon" id="menuCreditsIcon" aria-hidden="true"></span><span id="menuCreditsLabel"></span><strong id="menuBalance">—</strong></a>
+      <hr class="mode-divider">
+      <a id="menuReleases" class="account-menu-link" target="_blank" rel="noopener noreferrer"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="m12.88 7.017l4.774 1.271m-5.796 2.525l2.386.636m-2.267 6.517l.954.255c2.7.72 4.05 1.079 5.114.468c1.063-.61 1.425-1.953 2.148-4.637l1.023-3.797c.724-2.685 1.085-4.027.471-5.085s-1.963-1.417-4.664-2.136l-.954-.255c-2.7-.72-4.05-1.079-5.113-.468c-1.064.61-1.426 1.953-2.15 4.637l-1.022 3.797c-.724 2.685-1.086 4.027-.471 5.085c.614 1.057 1.964 1.417 4.664 2.136Z" /><path d="m12 20.946l-.952.26c-2.694.733-4.04 1.1-5.102.477c-1.06-.622-1.422-1.991-2.143-4.728l-1.021-3.872c-.722-2.737-1.083-4.106-.47-5.184C2.842 6.966 4 7 5.5 7" /></svg><span id="menuReleasesLabel"></span></a>
+      <button id="menuLanguage" class="account-menu-link menu-language" aria-expanded="false" aria-controls="languageOptions"><svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" /><path d="M8 12c0 6 4 10 4 10s4-4 4-10s-4-10-4-10s-4 4-4 10Z" /><path d="M21 15H3m18-6H3" /></svg><span id="menuLanguageLabel"></span><span id="currentLanguage"></span><svg class="language-chevron" aria-hidden="true" viewBox="0 0 24 24"><path d="m9 5 7 7-7 7"/></svg></button><div id="languageOptions" class="language-options" hidden></div>
+      <a id="menuSupport" class="account-menu-link" target="_blank" rel="noopener noreferrer"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="m7 8.5l2.942 1.74c1.715 1.014 2.4 1.014 4.116 0L17 8.5" /><path d="M2.016 13.476c.065 3.065.098 4.598 1.229 5.733c1.131 1.136 2.705 1.175 5.854 1.254c1.94.05 3.862.05 5.802 0c3.149-.079 4.723-.118 5.854-1.254c1.131-1.135 1.164-2.668 1.23-5.733c.02-.986.02-1.966 0-2.952c-.066-3.065-.099-4.598-1.23-5.733c-1.131-1.136-2.705-1.175-5.854-1.254a115 115 0 0 0-5.802 0c-3.149.079-4.723.118-5.854 1.254c-1.131 1.135-1.164 2.668-1.23 5.733a69 69 0 0 0 0 2.952Z" /></svg><span id="menuSupportLabel"></span></a>
+      <button id="menuLogout" class="account-menu-link menu-logout"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M15.5 8.04c-.041-1.16-.178-1.885-.636-2.453c-.653-.812-1.77-1.066-4.004-1.576l-1-.228c-3.395-.774-5.092-1.161-6.226-.27C2.5 4.405 2.5 6.126 2.5 9.568v4.864c0 3.442 0 5.164 1.134 6.055s2.83.504 6.225-.27l1.002-.228c2.233-.51 3.35-.764 4.003-1.576c.458-.567.595-1.293.636-2.453m3-6.948s3 2.21 3 3s-3 3-3 3m2.5-3H8.5" /></svg><span id="menuLogoutLabel"></span></button>
+    </section>
+    <section id="settingsMenu" class="settings-menu" hidden>
+      <p id="site"></p>
+      <button id="current"></button><button id="all"></button
+      ><button id="disable"></button>
+    </section>
+    <div class="workspace">
+      <main>
+        <section class="prompt-card">
+          <div id="taskToolbar" class="task-toolbar" hidden>
+            <span id="taskInfo"></span><button id="retry" class="text-button" disabled></button>
+          </div>
+          <p id="status" role="status" aria-live="polite" hidden></p>
+          <div id="favoriteConflict" class="favorite-conflict" hidden><button id="favoriteLoadCloud" type="button"></button><button id="favoriteKeepMine" type="button"></button></div>
+          <button id="permission" hidden></button>
+          <section id="emptyState" class="empty-state" aria-labelledby="emptyTitle" hidden>
+            <div class="empty-illustration" aria-hidden="true">
+              <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="7" width="36" height="34" rx="7"/><circle cx="17" cy="18" r="3"/><path d="m8 33 10-10 8 8 6-6 9 9"/></svg>
+              <span class="empty-sparkle">✦</span>
+            </div>
+            <h2 id="emptyTitle"></h2>
+            <p id="emptyDescription"></p>
+            <button id="emptyUpload" type="button"></button>
+            <p id="emptyHint" class="empty-hint"></p>
+          </section>
+          <div id="taskContent" role="tabpanel" hidden>
+            <div class="prompt-editor">
+              <textarea id="prompt" maxlength="1800" rows="16"></textarea>
+              <div id="promptLoading" role="status" aria-live="polite" hidden><span class="loading-spinner" aria-hidden="true"></span><span id="promptLoadingText"></span></div>
+            </div>
+            <div class="actions">
+              <button id="copy" disabled><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><path d="M9 15c0-2.828 0-4.243.879-5.121C10.757 9 12.172 9 15 9h1c2.828 0 4.243 0 5.121.879C22 10.757 22 12.172 22 15v1c0 2.828 0 4.243-.879 5.121C20.243 22 18.828 22 16 22h-1c-2.828 0-4.243 0-5.121-.879C9 20.243 9 18.828 9 16z"/><path d="M17 9c-.003-2.957-.047-4.489-.908-5.538a4 4 0 0 0-.554-.554C14.43 2 12.788 2 9.5 2c-3.287 0-4.931 0-6.038.908a4 4 0 0 0-.554.554C2 4.57 2 6.212 2 9.5c0 3.287 0 4.931.908 6.038a4 4 0 0 0 .554.554c1.05.86 2.58.906 5.538.908"/></g></svg><span id="copyLabel"></span></button>
+              <button id="chatgpt" disabled><svg viewBox="0 0 40 40" width="20" height="20" fill="currentColor" aria-hidden="true">
+    <path
+      d="M32.8377 17.282C33.2127 16.25 33.3072 15.218 33.2127 14.1875C33.1197 13.1571 32.7447 12.1251 32.2752 11.1876C31.4322 9.78209 30.2127 8.6571 28.8072 8.0001C27.3072 7.34461 25.7127 7.15711 24.1197 7.53211C23.3698 6.78212 22.5253 6.12512 21.5878 5.65713C20.6503 5.18913 19.5253 5.00013 18.4948 5.00013C16.8851 4.99074 15.3125 5.48246 13.9948 6.40712C12.6824 7.34311 11.7449 8.6571 11.2754 10.1571C10.1504 10.4376 9.21289 10.9071 8.27539 11.4696C7.4324 12.1251 6.77541 12.9696 6.21291 13.8126C5.36992 15.2195 5.08792 16.8125 5.27542 18.407C5.46399 19.9968 6.11605 21.496 7.1504 22.718C6.79608 23.7086 6.66795 24.7659 6.77541 25.8124C6.86991 26.8444 7.2449 27.8749 7.7129 28.8124C8.55739 30.2194 9.77538 31.3444 11.1824 31.9999C12.6824 32.6569 14.2753 32.8444 15.8698 32.4694C16.6198 33.2194 17.4628 33.8749 18.4003 34.3444C19.3378 34.8139 20.4628 34.9999 21.4948 34.9999C23.1043 35.0097 24.6769 34.5185 25.9947 33.5944C27.3072 32.6569 28.2447 31.3444 28.7127 29.8444C29.7719 29.6432 30.7682 29.1934 31.6197 28.5319C32.4627 27.8749 33.2127 27.1249 33.6822 26.1874C34.5251 24.7819 34.8071 23.1875 34.6196 21.5945C34.4322 20 33.8697 18.5015 32.8377 17.282ZM21.5878 33.0304C20.0878 33.0304 18.9628 32.5609 17.9323 31.7179L24.1197 28.1554C24.2862 28.0803 24.4196 27.9469 24.4947 27.7804C24.5698 27.636 24.6021 27.4731 24.5877 27.3109V18.875L27.1197 20.375V27.3124C27.1455 28.0547 27.0215 28.7945 26.755 29.4878C26.4885 30.181 26.085 30.8134 25.5687 31.3473C25.0523 31.8811 24.4337 32.3054 23.7497 32.5949C23.0658 32.8843 22.3305 33.0314 21.5878 33.0304ZM9.49488 27.8749C8.83789 26.7499 8.55739 25.4374 8.83789 24.125L15.0253 27.6874C15.1693 27.7638 15.3325 27.7966 15.4948 27.7819C15.6823 27.7819 15.8698 27.7819 15.9628 27.6874L23.2753 23.4695V26.3749L17.1823 29.9374C16.5506 30.3042 15.8527 30.5425 15.1287 30.6393C14.4046 30.7358 13.6686 30.6884 12.9629 30.4999C11.4629 30.1249 10.2449 29.1874 9.49488 27.8749ZM7.9004 14.8445C8.56239 13.7234 9.58826 12.8627 10.8074 12.4056V19.532C10.8074 19.718 10.8074 19.907 10.9004 20C10.9755 20.1665 11.1089 20.2998 11.2754 20.375L18.5878 24.5944L16.0573 26.0944L10.0574 22.625C9.41842 22.2639 8.85742 21.7797 8.40684 21.2004C7.95627 20.6211 7.62506 19.9582 7.4324 19.25C7.05741 17.8445 7.1504 16.157 7.9004 14.8445ZM28.6197 19.625L21.3073 15.407L23.8377 13.9071L29.8377 17.375C30.7752 17.9375 31.5252 18.6875 31.9947 19.625C32.4642 20.5625 32.7447 21.5945 32.6502 22.7195C32.5603 23.7755 32.1699 24.7837 31.5252 25.6249C30.8697 26.4694 30.0252 27.1249 28.9947 27.4999V20.375C28.9947 20.1875 28.9947 20 28.9002 19.907C28.9002 19.907 28.8072 19.718 28.6197 19.625ZM31.1502 15.875L24.9627 12.3126C24.7752 12.2196 24.6822 12.2196 24.4947 12.2196C24.3072 12.2196 24.1197 12.2196 24.0252 12.3126L16.7128 16.532V13.6251L22.8073 10.0626C23.7448 9.50009 24.7752 9.31259 25.9002 9.31259C26.9322 9.31259 27.9627 9.68759 28.9002 10.3446C29.7447 11.0001 30.4947 11.8446 30.8697 12.7821C31.2447 13.7196 31.3377 14.8445 31.1502 15.875ZM15.4003 21.125L12.8699 19.625V12.5946C12.8699 11.5626 13.1503 10.4376 13.7128 9.59459C14.2753 8.6571 15.1198 8.0001 16.0573 7.53211C17.0127 7.05249 18.0956 6.88812 19.1503 7.06261C20.1823 7.15711 21.2128 7.62511 22.0573 8.2821L15.8698 11.8446C15.7033 11.9197 15.57 12.0531 15.4948 12.2196C15.4003 12.4071 15.4003 12.5001 15.4003 12.6876V21.125ZM16.7128 18.125L19.9948 16.25L23.2753 18.125V21.875L19.9948 23.75L16.7128 21.875V18.125Z"
+    />
+  </svg><span id="chatgptLabel"></span></button>
+              <button id="handoff" disabled><svg class="handoff-logo" width="13" height="16" aria-hidden="true" viewBox="0 0 135 166" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 42.3826C0.000203737 33.7618 7.79365 27.2372 16.2803 28.7527L21.6924 29.7185V130.2C21.6925 138.603 27.9658 145.683 36.3076 146.694L70.418 150.829C66.9159 152.886 63.06 154.444 58.9346 155.391L16.9443 165.032C8.27218 167.023 5.93579e-05 160.435 0 151.537V42.3826Z" fill="url(#paint0_linear_2646_1478)"/>
+<path d="M29.0767 126.087V17.0608C29.0767 8.06202 37.0556 1.15484 45.9615 2.44386L93.8544 9.37573C117.077 12.7369 134.307 32.641 134.307 56.1053C134.307 80.3349 115.967 100.632 91.8618 103.08L80.3122 104.253C77.5928 104.529 75.2305 102.395 75.2305 99.6614V81.6232C75.2305 79.2911 76.9701 77.3254 79.2849 77.042L84.0608 76.4572C91.9311 75.4935 97.8459 68.8102 97.8459 60.8812V57.8833C97.8459 51.1148 92.9525 45.3383 86.276 44.2255L72.1389 41.8694C68.2004 41.2129 64.6151 44.2501 64.6151 48.243V105.231C64.6151 109.819 68.3346 113.538 72.9228 113.538H84.4613C87.5201 113.538 89.9997 116.018 89.9997 119.077V132.422C89.9997 139.069 84.1878 144.219 77.5899 143.419L40.4447 138.916C33.9564 138.13 29.0767 132.623 29.0767 126.087Z" fill="white"/>
+<defs>
+<linearGradient id="paint0_linear_2646_1478" x1="35.209" y1="28.5332" x2="35.209" y2="165.389" gradientUnits="userSpaceOnUse">
+<stop stop-color="white"/>
+<stop offset="1" stop-color="white" stop-opacity="0.4"/>
+</linearGradient>
+</defs>
+</svg>
+<span id="handoffLabel"></span></button>
+            </div>
+          </div>
+        </section>
+      </main>
+      <aside class="task-rail">
+        <nav id="tasks" role="tablist" aria-orientation="vertical"></nav>
+        <div class="account-block">
+          <button
+            id="accountIdentity"
+            class="account-identity"
+            aria-expanded="false"
+            aria-controls="accountMenu"
+            hidden
+          >
+            <span class="account-credits"
+              ><svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                width="16"
+                height="16"
+                fill="currentColor"
+                stroke="currentColor"
+                stroke-linejoin="round"
+                stroke-width="2"
+                aria-hidden="true"
+              >
+                <path
+                  d="M8 15C12.8747 15 15 12.949 15 8C15 12.949 17.1104 15 22 15C17.1104 15 15 17.1104 15 22C15 17.1104 12.8747 15 8 15Z"
+                />
+                <path
+                  d="M2 6.5C5.13376 6.5 6.5 5.18153 6.5 2C6.5 5.18153 7.85669 6.5 11 6.5C7.85669 6.5 6.5 7.85669 6.5 11C6.5 7.85669 5.13376 6.5 2 6.5Z"
+                /></svg
+              ><span id="balance"></span
+            ></span>
+            <span class="account-profile">
+            <span class="avatar"
+              ><img
+                id="avatarImage"
+                alt=""
+                referrerpolicy="no-referrer"
+                hidden /><span id="avatarFallback"></span
+            ></span>
+              <span id="accountName" class="account-name"></span>
+            </span>
+          </button>
+        </div>
+      </aside>
+    </div>
+    <dialog id="byokDialog" class="byok-dialog" aria-labelledby="byokTitle">
+      <form id="byokForm" novalidate>
+        <h2 id="byokTitle"></h2>
+        <label><span id="byokEndpointLabel"></span><input id="byokEndpoint" type="url" inputmode="url" autocomplete="off" spellcheck="false" placeholder="https://api.openai.com/v1"></label>
+        <label><span id="byokKeyLabel"></span><input id="byokKey" type="password" autocomplete="off" spellcheck="false" maxlength="4096"></label>
+        <div class="byok-model-field">
+          <div class="byok-model-heading"><label id="byokModelLabel" for="byokModel"></label><button id="byokFetchModels" type="button"></button></div>
+          <div class="byok-model-combobox" id="byokModelCombobox">
+            <input id="byokModel" type="text" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="byokModels" aria-describedby="byokModelsStatus" autocomplete="off" spellcheck="false" maxlength="200" placeholder="gpt-4.1-mini">
+            <button id="byokModelsToggle" class="byok-model-toggle" type="button" tabindex="-1" aria-controls="byokModels" aria-expanded="false" hidden><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="m6 9 6 6 6-6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            <div id="byokModels" class="byok-model-options" role="listbox" hidden></div>
+          </div>
+          <p id="byokModelsStatus" role="status" aria-live="polite" hidden></p>
+        </div>
+        <div class="byok-notice">
+          <p id="byokDisclosure"></p>
+          <label class="byok-consent"><input id="byokConsent" type="checkbox"><span id="byokConsentLabel"></span></label>
+        </div>
+        <p id="byokError" role="alert" hidden></p>
+        <div class="byok-dialog-actions"><button id="byokClear" type="button"></button><button id="byokClose" type="button"></button><button id="byokSave" type="submit"></button></div>
+      </form>
+    </dialog>
+    <div id="byokToast" class="panel-toast" role="status" aria-live="polite" hidden></div>
+    <div id="dropOverlay" role="status" aria-live="polite" hidden></div>
+    <script src="panel.js"></script>
+  </body>
+</html>

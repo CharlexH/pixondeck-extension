@@ -1,0 +1,39 @@
+{
+  "name": "@pixondeck/chrome",
+  "private": true,
+  "version": "1.0.1",
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "build:production": "node scripts/build.mjs --production",
+    "package:production": "npm run build:production && python3 scripts/package-production.py",
+    "typecheck": "tsc --noEmit",
+    "test": "node --experimental-strip-types --test src/*.test.ts",
+    "preview": "node preview/start.mjs",
+    "notices": "node scripts/third-party-notices.mjs",
+    "prebuild": "npm run notices",
+    "prebuild:production": "npm run notices"
+  },
+  "dependencies": {
+    "@clerk/chrome-extension": "3.1.84"
+  },
+  "devDependencies": {
+    "@types/chrome": "^0.1.24",
+    "esbuild": "^0.25.10",
+    "typescript": "^5.9.3",
+    "jsdom": "30.0.1"
+  },
+  "description": "Open-source Chrome extension that turns web images into editable AI prompts.",
+  "license": "Apache-2.0",
+  "homepage": "https://pixondeck.com/extension",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/CharlexH/pixondeck-extension.git"
+  },
+  "bugs": {
+    "url": "https://github.com/CharlexH/pixondeck-extension/issues"
+  },
+  "engines": {
+    "node": ">=22.18.0"
+  }
+}
