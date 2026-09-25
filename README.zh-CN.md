@@ -16,6 +16,10 @@
 
 </div>
 
+[![PixOnDeck 操作演示](docs/screenshots/walkthrough.gif)](src/assets/welcome-demo.mp4)
+
+*操作演示动图 · 点击查看 MP4。*
+
 > **目前请使用手动安装。** Chrome 商店版本尚未上架。下载上方已打包的 ZIP 即可，不需要 Node.js、终端或自行编译。
 
 [安装步骤](#手动安装) · [第一次反推](#开始第一次反推) · [更新与排错](#更新与常见问题) · [隐私说明](#隐私与权限) · [开发者说明](#开发者说明)
@@ -43,10 +47,6 @@
     <td width="33%" valign="top"><strong>BYOK</strong><br><br><a href="docs/screenshots/byok.png"><img src="docs/screenshots/byok.png" alt="BYOK" width="300"></a></td>
   </tr>
 </table>
-
-[![PixOnDeck 操作演示](docs/screenshots/walkthrough.gif)](src/assets/welcome-demo.mp4)
-
-*操作演示动图 · 点击查看 MP4。*
 
 ## 手动安装
 

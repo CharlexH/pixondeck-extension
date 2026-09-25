@@ -16,6 +16,10 @@ Pick an image → Get a prompt → Generate in **ChatGPT or PixOnDeck**.
 
 </div>
 
+[![PixOnDeck workflow demo](docs/screenshots/walkthrough.gif)](src/assets/welcome-demo.mp4)
+
+*Workflow animation · Click to view the MP4.*
+
 > **Install manually for now.** The Chrome Web Store version is not available yet. Download the prepared ZIP above; no Node.js, terminal or build step is required.
 
 [Installation](#manual-installation) · [First prompt](#create-your-first-prompt) · [Updates & help](#updates-and-troubleshooting) · [Privacy](#privacy-and-permissions) · [Developers](#for-developers)
@@ -43,10 +47,6 @@ Actual client UI replaying the example prompts above. Account and favorites are 
     <td width="33%" valign="top"><strong>BYOK</strong><br><br><a href="docs/screenshots/byok.png"><img src="docs/screenshots/byok.png" alt="BYOK" width="300"></a></td>
   </tr>
 </table>
-
-[![PixOnDeck workflow demo](docs/screenshots/walkthrough.gif)](src/assets/welcome-demo.mp4)
-
-*Workflow animation · Click to view the MP4.*
 
 ## Manual installation
 
