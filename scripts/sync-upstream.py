@@ -91,7 +91,7 @@ config['include'] = ['src/**/*.ts', 'src/**/*.tsx']
 files['tsconfig.json'] = (json.dumps(config, indent=2) + '\n').encode()
 package = json.loads((extension / 'package.json').read_text())
 public = json.loads((root / 'package.json').read_text())
-for key in ('description', 'license', 'homepage', 'repository', 'bugs', 'engines'):
+for key in ('description', 'license', 'homepage', 'repository', 'bugs', 'engines', 'overrides'):
     package[key] = public[key]
 upstream = json.loads((source / 'package.json').read_text())
 for dependency in ['react', 'react-dom', '@radix-ui/react-switch', 'clsx', 'tailwind-merge', 'onnxruntime-web']:

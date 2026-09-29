@@ -44,5 +44,8 @@
   },
   "engines": {
     "node": ">=22.18.0"
+  },
+  "overrides": {
+    "@clerk/clerk-js": "6.32.1"
   }
 }
