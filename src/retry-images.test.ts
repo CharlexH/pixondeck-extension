@@ -22,6 +22,35 @@ test("retains the prepared Blob and original geometry without base64 or re-encod
   assert.deepEqual(record.image, input);
   assert.equal(record.expiresAt, 10_000);
 });
+test("accepts current and legacy prepared dimensions, rejecting other scales and distortion", () => {
+  for (const [width, height] of [
+    [960, 640],
+    [480, 320],
+  ]) {
+    const input = { ...image(), width, height };
+    assert.equal(
+      makeRetryImageRecord("a", "t", input, 5000, 1000).image.blob,
+      input.blob,
+    );
+  }
+  for (const [width, height] of [
+    [720, 480],
+    [960, 639],
+    [961, 640],
+  ]) {
+    assert.throws(
+      () =>
+        makeRetryImageRecord(
+          "a",
+          "t",
+          { ...image(), width, height },
+          5000,
+          1000,
+        ),
+      /INVALID_PREPARED/,
+    );
+  }
+});
 test("retention respects earlier expiry and caps accidental later expiry at seven days", () => {
   const early = makeRetryImageRecord(
     "a",

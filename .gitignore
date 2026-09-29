@@ -10,3 +10,5 @@ development-key.json
 *.pem
 *.key
 .DS_Store
+
+assets/models/

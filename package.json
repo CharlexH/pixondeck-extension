@@ -1,7 +1,7 @@
 {
   "name": "@pixondeck/chrome",
   "private": true,
-  "version": "1.0.1",
+  "version": "1.1.0",
   "type": "module",
   "scripts": {
     "build": "node scripts/build.mjs",
@@ -12,16 +12,25 @@
     "preview": "node preview/start.mjs",
     "notices": "node scripts/third-party-notices.mjs",
     "prebuild": "npm run notices",
-    "prebuild:production": "npm run notices"
+    "prebuild:production": "npm run notices",
+    "package:manual": "node scripts/package-manual.mjs"
   },
   "dependencies": {
-    "@clerk/chrome-extension": "3.1.84"
+    "@clerk/chrome-extension": "3.1.84",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "@radix-ui/react-switch": "^1.3.7",
+    "clsx": "^2.1.1",
+    "tailwind-merge": "^2.5.2",
+    "onnxruntime-web": "1.29.0"
   },
   "devDependencies": {
     "@types/chrome": "^0.1.24",
     "esbuild": "^0.25.10",
     "typescript": "^5.9.3",
-    "jsdom": "30.0.1"
+    "jsdom": "30.0.1",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.4"
   },
   "description": "Open-source Chrome extension that turns web images into editable AI prompts.",
   "license": "Apache-2.0",

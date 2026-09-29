@@ -1,0 +1,26 @@
+export const poseMessages = {
+  en: {
+    auto: 'Recognize on reverse',
+    runningCancel: 'Recognizing locally · Click to cancel',
+    menu: 'Pose', configure: 'Configure', withPose: 'Include', withoutPose: 'Exclude',
+    handoffTooLong: 'Shorten the prompt before including the pose image.', handoffFailed: 'Could not send the pose image. Please try again.',
+    confirmTitle: 'Recognize this pose?', confirmDescription: 'Process this image locally. No credits are used. Check the result before using it for generation.', confirmStart: 'Recognize pose', include: 'Include pose image', includeHelp: 'Only the skeleton is sent. The image overlay is for checking the result.', cacheFailed: 'Pose is ready, but could not be saved on this device.', settings: 'Local pose model', title: 'Pose recognition', description: 'RTMW balanced · 314.8 MiB. Download once to process images on this device. Images are not uploaded; no credits are used.',
+    download: 'Download model', retry: 'Retry download', cancel: 'Cancel', delete: 'Delete model', close: 'Close', checking: 'Checking local model…', ready: 'Model downloaded and verified.', missing: 'Model not downloaded.', downloading: 'Downloading', failed: 'Download failed. Retry or delete the stored files.', cancelled: 'Download cancelled. You can resume with Retry download.', deleted: 'Local model deleted.', error: 'Local pose recognition failed. Retry, or check the model in settings.',
+    recognize: 'Recognize pose', view: 'View pose', running: 'Recognizing locally…', required: 'Download the model in Local pose model settings first.', unavailable: 'The local image is unavailable. Upload the image again.',
+    legend: 'Colors follow OpenPose; left/right refer to the subject, not the screen.',
+    skeleton: 'Skeleton', overlay: 'Image overlay', png: 'Download PNG', json: 'Download keypoints JSON', jsonDownload: 'Download JSON', preview: 'Recognized pose preview',
+    candidate: 'Candidate pose — check the result before using it.', partial: 'Partial pose — uncertain joints are omitted. Check before using.', rejected: 'Pose is uncertain. No usable skeleton was produced.', noPerson: 'No person detected. No skeleton was produced.', ambiguous: 'Multiple people detected. Choose an image with one person.',
+  },
+  'zh-CN': {
+    auto: '反推自动识别',
+    runningCancel: '正在本地识别 · 点击取消',
+    menu: '姿态', configure: '配置', withPose: '带', withoutPose: '不带',
+    handoffTooLong: '提示词过长，请缩短后再携带姿态图生成。', handoffFailed: '姿态图传递失败，请重试。',
+    confirmTitle: '识别这张图片的姿态？', confirmDescription: '在本机处理图片，不扣积分。识别后请检查结果，再用于生成。', confirmStart: '开始识别', include: '携带姿态图', includeHelp: '仅发送纯姿态图，叠加原图只用于检查识别结果。', cacheFailed: '姿态已生成，但未能保存到本机。', settings: '本地姿态模型', title: '姿态识别', description: 'RTMW balanced · 314.8 MiB。手动下载一次，在本机处理图片。图片不会上传，不消耗积分。',
+    download: '下载模型', retry: '重试下载', cancel: '取消', delete: '删除模型', close: '关闭', checking: '正在检查本地模型…', ready: '模型已下载并校验。', missing: '尚未下载模型。', downloading: '正在下载', failed: '下载失败，可以重试或删除已保存的文件。', cancelled: '下载已取消，可点击重试下载继续。', deleted: '本地模型已删除。', error: '本地姿态识别失败，请重试或在设置中检查模型。',
+    recognize: '识别姿态', view: '查看姿态', running: '正在本地识别…', required: '请先在“本地姿态模型”设置中下载模型。', unavailable: '本地图片已不可用，请重新上传图片。',
+    legend: '颜色遵循 OpenPose；左右指人物自身的左右，不是画面左右。',
+    skeleton: '骨架图', overlay: '原图叠加', png: '下载 PNG', json: '下载关键点 JSON', jsonDownload: '下载 JSON', preview: '姿态识别预览',
+    candidate: '候选姿态，请检查后再使用。', partial: '部分姿态：已省略不确定的关节，请检查后再使用。', rejected: '姿态不确定，未生成可用骨架。', noPerson: '未识别到人物，未生成骨架。', ambiguous: '识别到多个人物，请选择单人图片。',
+  },
+};

@@ -1,4 +1,11 @@
-import { BYOK_SETTINGS, BYOK_SECRET, DEFAULT_BYOK, providerEndpoint, validateByok, reverseWithByok, fetchByokModels, type ByokSettings } from "./byok";
+import { POSE_REFERENCE_INSTRUCTION } from "./shared/lib/generation/pose-reference";
+import { poseMessages } from "./pose-messages";
+import { installDialogDismissal } from "./dialog-dismiss";
+import { showChatGPTPoseHandoff } from "./chatgpt-pose-handoff";
+import { createPromptCleaner, cleaningStorageKey, type CleaningSnapshot } from "./prompt-cleaner";
+import { cleaningMessages } from "./cleaning-messages";
+import { createPosePanel } from "./pose-panel";
+import { BYOK_SETTINGS, BYOK_SECRET, DEFAULT_BYOK, providerEndpoint, validateByok, reverseWithByok, cleanPromptWithByok, fetchByokModels, type ByokSettings } from "./byok";
 import { STAR_SVG, reconcileFavorites, type SavedPrompt } from "./favorites";
 import { buildChatGPTHandoff } from "./chatgpt-handoff";
 import { languages, readLanguage, saveLanguage, accountMessages, welcomeMessages, emptyMessages, chatgptMessages, startupMessages, byokMessages, providerStatusMessages, favoriteMessages } from "./language";
@@ -8,7 +15,9 @@ import { config } from "./config";
 import { getRetryImage, putRetryImage, pruneRetryImages } from "./retry-images";
 import { prepareImage, MAX_FILE } from "./image";
 import { recoveryDecision, type PendingRequest } from "./recovery";
+import { recoveryMessages, recoveryErrorKey, definitelyRejected } from "./recovery-messages";
 import {
+  MAX_PROMPT_LENGTH,
   localTaskExpiresAt,
   emptyHistory,
   normalizeHistory,
@@ -22,14 +31,19 @@ const RETRY_ICON_SVG = '<svg aria-hidden="true" viewBox="0 0 24 24" fill="none" 
 const DELETE_ICON_SVG = '<svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m19.5 5.5l-.62 10.025c-.158 2.561-.237 3.842-.88 4.763a4 4 0 0 1-1.2 1.128c-.957.584-2.24.584-4.806.584c-2.57 0-3.855 0-4.814-.585a4 4 0 0 1-1.2-1.13c-.642-.922-.72-2.205-.874-4.77L4.5 5.5M3 5.5h18m-4.944 0l-.683-1.408c-.453-.936-.68-1.403-1.071-1.695a2 2 0 0 0-.275-.172C13.594 2 13.074 2 12.035 2c-1.066 0-1.599 0-2.04.234a2 2 0 0 0-.278.18c-.395.303-.616.788-1.058 1.757L8.053 5.5m1.447 11v-6m5 6v-6"/></svg>';
 const EXPAND_ICON_SVG = '<svg aria-hidden="true" viewBox="0 0 24 24" width="16" height="16"><g fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="7.5" cy="7.5" r="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M2.5 12c0-4.478 0-6.718 1.391-8.109S7.521 2.5 12 2.5c4.478 0 6.718 0 8.109 1.391S21.5 7.521 21.5 12c0 4.478 0 6.718-1.391 8.109S16.479 21.5 12 21.5c-4.478 0-6.718 0-8.109-1.391S2.5 16.479 2.5 12Z"/><path d="M5 21c4.372-5.225 9.274-12.116 16.498-7.458"/></g></svg>';
 const BYOK_ICON_SVG = '<svg class="byok-connect-icon" aria-hidden="true" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4.513 19.487c2.512 2.392 5.503 1.435 6.7.466c.618-.501.897-.825 1.136-1.065c.837-.777.784-1.555.24-2.177c-.219-.249-1.616-1.591-2.956-2.967c-.694-.694-1.172-1.184-1.582-1.58c-.547-.546-1.026-1.172-1.744-1.154c-.658 0-1.136.58-1.735 1.179c-.688.688-1.196 1.555-1.375 2.333c-.539 2.273.299 3.888 1.316 4.965Zm0 0L2 21.999M19.487 4.515c-2.513-2.394-5.494-1.42-6.69-.45c-.62.502-.898.826-1.138 1.066c-.837.778-.784 1.556-.239 2.178c.078.09.31.32.635.644m7.432-3.438c1.017 1.077 1.866 2.71 1.327 4.985c-.18.778-.688 1.645-1.376 2.334c-.598.598-1.077 1.179-1.735 1.179c-.718.018-1.09-.502-1.639-1.048m3.423-7.45L22 2m-5.936 9.964c-.41-.395-.994-.993-1.688-1.687c-.858-.882-1.74-1.75-2.321-2.325m4.009 4.012l-1.562 1.525m-3.99-3.984l1.543-1.553" /></svg>';
+const disposeDialogDismissal = installDialogDismissal(document);
 const locale = readLanguage(chrome.i18n.getUILanguage());
 const zh = locale === "zh-CN";
+const recoveryText = recoveryMessages[locale as keyof typeof recoveryMessages];
+const localApi = ["localhost", "127.0.0.1"].includes(new URL(config.apiOrigin).hostname);
 const accountText = accountMessages[zh ? "zh-CN" : "en"];
 const welcomeText = welcomeMessages[zh ? "zh-CN" : "en"];
 const chatgptText = chatgptMessages[locale as keyof typeof chatgptMessages];
 const startupText = startupMessages[locale as keyof typeof startupMessages];
 const byokText = byokMessages[locale as keyof typeof byokMessages];
 const providerText = providerStatusMessages[locale as keyof typeof providerStatusMessages];
+const poseText = poseMessages[locale as keyof typeof poseMessages];
+const cleaningText = cleaningMessages[locale as keyof typeof cleaningMessages];
 const favoriteText = favoriteMessages[locale as keyof typeof favoriteMessages];
 const emptyText = emptyMessages[locale as keyof typeof emptyMessages];
 const say = (en: string, cn: string) => (zh ? cn : en);
@@ -125,6 +139,8 @@ let accountEpoch = 0,
   prepared: Prepared | null = null;
 let pending: Selection | null = null,
   uncertain = false,
+  connectionIssue = "",
+  recoveryChecking = false,
   pendingRequest: PendingRequest | null = null,
   busy = false,
   requestId = "",
@@ -133,6 +149,7 @@ let pending: Selection | null = null,
   poll = 0;
 let byokSettings: ByokSettings = { ...DEFAULT_BYOK };
 let byokKey = "";
+let byokConfigurationRevision = 0;
 let creditBalance: number | null = null;
 let byokConnection: keyof typeof providerText = "unconfigured";
 let byokAbort: AbortController | null = null;
@@ -241,6 +258,7 @@ function scheduleAuthRecovery() {
 const preparedByTask = new Map<string, Prepared>();
 const prompt = el<HTMLTextAreaElement>("prompt");
 const status = (message: string) => {
+  message ||= connectionIssue || (uncertain ? recoveryText.pending : "");
   if (message && document.body.classList.contains("auth-pending")) {
     document.body.classList.remove("auth-pending");
     document.body.removeAttribute("aria-busy");
@@ -270,12 +288,90 @@ const runningTask = () =>
     (entry) => !["succeeded", "failed"].includes(entry.task.status),
   )?.task;
 const isRunning = () => Boolean(runningTask());
+let chatgptPoseDialog: { close(): void } | null = null;
+const posePanel = createPosePanel(locale, async () => {
+  const account = userId, id = viewHistory().selectedId, epoch = accountEpoch;
+  if (!id) return null;
+  const image = preparedByTask.get(id) ?? await getRetryImage(account, id).catch(() => null);
+  if (account !== userId || epoch !== accountEpoch || viewHistory().selectedId !== id) return null;
+  return image?.originalBlob ?? image?.blob ?? null;
+});
+const CLEAN_ICON_SVG = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M11 21h-1c-3.771 0-5.657 0-6.828-1.172S2 16.771 2 13v-3c0-3.771 0-5.657 1.172-6.828S6.229 2 10 2h2c3.771 0 5.657 0 6.828 1.172S20 6.229 20 10v.5m-2.593 3.904a.638.638 0 0 1 1.186 0l.037.093a5.1 5.1 0 0 0 2.873 2.873l.093.037a.638.638 0 0 1 0 1.186l-.093.037a5.1 5.1 0 0 0-2.873 2.873l-.037.093a.638.638 0 0 1-1.186 0l-.037-.093a5.1 5.1 0 0 0-2.873-2.873l-.093-.037a.638.638 0 0 1 0-1.186l.093-.037a5.1 5.1 0 0 0 2.873-2.873zM7 7h8m-8 4.5h8M7 16h4"/></svg>';
+el("cleanPrompt").innerHTML = CLEAN_ICON_SVG;
+el("cleanConfirmTitle").textContent = cleaningText.confirmTitle;
+el("cleanConfirmDescription").textContent = cleaningText.confirmBody;
+el("cleanConfirmCancel").textContent = cleaningText.cancel;
+el("cleanConfirmStart").textContent = cleaningText.confirm;
+function confirmCleaning(snapshot: CleaningSnapshot): Promise<boolean> {
+  if (snapshot.mode === "byok" && (!byokKey || !byokSettings.model)) {
+    openByokDialog();
+    return Promise.resolve(false);
+  }
+  el("cleanConfirmDescription").textContent = snapshot.mode === "byok" ? cleaningText.byokConfirmBody : cleaningText.confirmBody;
+  el("cleanConfirmStart").textContent = snapshot.mode === "byok" ? cleaningText.byokConfirm : cleaningText.confirm;
+  const dialog = el<HTMLDialogElement>("cleanConfirm");
+  return new Promise(resolve => {
+    dialog.returnValue = "cancel";
+    dialog.onclose = () => resolve(dialog.returnValue === "clean");
+    el("cleanConfirmCancel").onclick = () => dialog.close("cancel");
+    el("cleanConfirmStart").onclick = () => dialog.close("clean");
+    dialog.showModal();
+    el("cleanConfirmCancel").focus();
+  });
+}
+const cleaningConfigKey = () => JSON.stringify([accountEpoch, byokConfigurationRevision, byokSettings.baseUrl, byokSettings.model]);
+const cleaning = createPromptCleaner({
+  read: () => userId && task?.status === "succeeded" ? { account: userId, taskId: task.id, text: prompt.value, mode: isByok() ? "byok" : "credits", configKey: cleaningConfigKey() } : null,
+  load: async (account, id) => { const key = cleaningStorageKey(account, id); return (await chrome.storage.local.get(key))[key]; },
+  save: async (account, id, value) => { await chrome.storage.local.set({ [cleaningStorageKey(account, id)]: value }); },
+  api: async (path, init, account) => {
+    if (account !== userId) throw new Error("ACCOUNT_CHANGED");
+    const epoch = accountEpoch;
+    const data = await api(path, init);
+    if (account !== userId || epoch !== accountEpoch) throw new Error("ACCOUNT_CHANGED");
+    return data;
+  },
+  confirm: confirmCleaning,
+  cleanByok: async (text, snapshot) => {
+    if (snapshot.account !== userId || snapshot.configKey !== cleaningConfigKey() || !isByok()) throw new Error("ACCOUNT_CHANGED");
+    const result = await cleanPromptWithByok({ ...byokSettings }, byokKey, text);
+    return result.prompt;
+  },
+  apply: async (snapshot, text) => {
+    if (snapshot.account !== userId || snapshot.taskId !== task?.id) return;
+    prompt.value = text;
+    await save();
+  },
+  changed: () => renderCleaningControls(),
+  notice: key => status(key === "restored" || key === "selectedCleaned" ? "" : cleaningText[key]),
+  error: error => {
+    const code = error instanceof Error ? error.message : "";
+    status(code === "insufficient_credits" ? recoveryText.credits : code === "rate_limited" ? cleaningText.limit : code === "prompt_cleaning_unavailable" ? cleaningText.unavailable : cleaningText.uncertain);
+  },
+  balance: setBalance,
+});
+function renderCleaningControls() {
+  const button = el<HTMLButtonElement>("cleanPrompt");
+  const state = cleaning.state;
+  button.hidden = !task || task.status !== "succeeded";
+  button.disabled = cleaning.busy || !prompt.value.trim();
+  button.setAttribute("aria-busy", String(cleaning.busy));
+  button.setAttribute("aria-pressed", String(state?.phase === "ready" && state.active === "cleaned"));
+  button.title = cleaning.busy ? cleaningText.cleaning : state?.phase === "pending" ? cleaningText.recover : state?.phase === "ready" ? (state.active === "cleaned" ? cleaningText.showOriginal : cleaningText.showCleaned) : (isByok() ? cleaningText.byokTitle : cleaningText.title);
+  button.setAttribute("aria-label", button.title);
+}
+el("cleanPrompt").onclick = () => void cleaning.click();
+window.addEventListener("focus", () => void cleaning.resume());
 const auth = createAuthSync({
   publishableKey: config.publishableKey,
   syncHost: config.syncHost,
   onChange: (user) => accountChanged(user),
-  onError: (error) =>
-    status(error instanceof Error ? error.message : String(error)),
+  onError: (error) => {
+    recoveryChecking = false;
+    connectionIssue = recoveryText[recoveryErrorKey(error, localApi)];
+    status(connectionIssue);
+    controls();
+  },
 });
 function setBalance(value: number) {
   creditBalance = value;
@@ -294,6 +390,11 @@ function taskState(item: Task) {
       : say("Working", "处理中");
 }
 function controls() {
+  renderCleaningControls();
+  const action = el<HTMLButtonElement>("recoveryAction");
+  action.hidden = !userId || (!uncertain && !connectionIssue);
+  action.disabled = busy || recoveryChecking;
+  action.textContent = recoveryChecking ? recoveryText.checking : uncertain ? recoveryText.resolve : recoveryText.check;
   const loading = Boolean(task && !["succeeded", "failed"].includes(task.status));
   el("promptLoading").hidden = !loading;
   el("promptLoadingText").textContent = say("Analyzing image…", "正在反推…");
@@ -330,9 +431,9 @@ function controls() {
       !task || task.status !== "succeeded" || !prompt.value.trim();
   el("handoff").hidden = false;
   el<HTMLButtonElement>("retry").disabled =
-    busy || isRunning() || !task || !userId;
-  el<HTMLButtonElement>("uploadButton").disabled = busy || isRunning();
-  el<HTMLButtonElement>("emptyUpload").disabled = busy || isRunning();
+    busy || recoveryChecking || isRunning() || uncertain || (!isByok() && Boolean(connectionIssue)) || !task || !userId;
+  el<HTMLButtonElement>("uploadButton").disabled = busy || recoveryChecking || isRunning() || uncertain || (!isByok() && Boolean(connectionIssue));
+  el<HTMLButtonElement>("emptyUpload").disabled = busy || recoveryChecking || isRunning() || uncertain || (!isByok() && Boolean(connectionIssue));
 }
 function taskDetail(item: Task) {
   if (favoritesView) return favoriteText.saved;
@@ -452,11 +553,15 @@ function renderTabs() {
 }
 function renderSelected() {
   const history = viewHistory();
-  prompt.maxLength = favoritesView ? 2000 : 1800;
+  prompt.maxLength = MAX_PROMPT_LENGTH;
   el("tasks").setAttribute("aria-label", favoritesView ? favoriteText.favorites : say("Recent tasks", "最近任务"));
   const entry = history.entries.find(
     (item) => item.task.id === history.selectedId,
   );
+  el<HTMLDialogElement>("cleanConfirm").close("cancel");
+  chatgptPoseDialog?.close();
+  chatgptPoseDialog = null;
+  posePanel.select(entry ? `${userId}:${entry.task.id}` : null);
   task = entry?.task ?? null;
   if (prompt.value !== (entry?.draft ?? "")) prompt.value = entry?.draft ?? "";
   prepared = entry ? (preparedByTask.get(entry.task.id) ?? null) : prepared;
@@ -521,7 +626,7 @@ function renderSelected() {
     view.title = say("View image", "查看大图");
     view.setAttribute("aria-label", view.title);
     view.onclick = () => void viewTaskImage(taskId);
-    top.append(task.status === "succeeded" ? favoriteStar(task, true) : statusDot(task), view, el("retry"), remove);
+    top.append(task.status === "succeeded" ? favoriteStar(task, true) : statusDot(task), el("cleanPrompt"), el("poseRecognize"), view, el("retry"), remove);
     const bottom = document.createElement("span");
     bottom.className = "task-info-row task-info-details";
     const feedback = document.createElement("span");
@@ -538,6 +643,7 @@ function renderSelected() {
   status(favoritesView && favoriteConflictId === task?.id ? (favoriteItems.has(task!.id) ? favoriteText.conflict : favoriteText.deleted) : "");
   renderTabs();
   controls();
+  void cleaning.resume();
 }
 async function deleteLocalTask(id: string) {
   const index = history.entries.findIndex((entry) => entry.task.id === id);
@@ -553,6 +659,8 @@ async function deleteLocalTask(id: string) {
   try {
     await persist();
     await pruneRetryImages(account, remainingIds);
+    await posePanel.remove(`${account}:${id}`);
+    await chrome.storage.local.remove(cleaningStorageKey(account, id));
   } catch {
     if (account === userId && epoch === accountEpoch)
       status(say("Could not finish removing local data.", "本地数据清理未完成，请重试。"));
@@ -596,7 +704,6 @@ async function viewTaskImage(id: string) {
   full.src = url;
   full.alt = say("Task image", "任务图片");
   dialog.append(close, full);
-  dialog.onclick = event => { if (event.target === dialog) dialog.close(); };
   dialog.onclose = () => { if (image) URL.revokeObjectURL(url); dialog.remove(); };
   document.body.append(dialog);
   dialog.showModal();
@@ -675,6 +782,7 @@ async function showTask(
   const account = userId, epoch = accountEpoch;
   operationRevision++;
   const selected = history.selectedId;
+  const previousStatus = history.entries.find(entry => entry.task.id === next.id)?.task.status;
   let storageWarning = "";
   history = mergeTask(history, next, {
     select,
@@ -712,6 +820,7 @@ async function showTask(
     renderTabs();
     controls();
   }
+  if (next.status === "succeeded" && previousStatus && previousStatus !== "succeeded" && next.id === history.selectedId) void posePanel.autoRecognize(`${account}:${next.id}`);
   if (storageWarning) status(storageWarning);
   await persist();
   window.clearTimeout(poll);
@@ -779,6 +888,7 @@ async function accountChanged(user: AuthUser | null) {
   const canRestore = () =>
     canApplyRecovery(snapshot, { refreshRevision, operationRevision, busy });
   if (id !== userId) {
+    posePanel.select(null);
     byokAbort?.abort(); byokAbort = null;
     el<HTMLDialogElement>("byokDialog").close();
     el<HTMLInputElement>("byokKey").value = "";
@@ -792,6 +902,8 @@ async function accountChanged(user: AuthUser | null) {
     busy = false;
     snapshot.busy = false;
     pendingRequest = null;
+    connectionIssue = "";
+    recoveryChecking = false;
     window.clearTimeout(poll);
     userId = "";
     document.body.classList.add("auth-pending");
@@ -825,7 +937,9 @@ async function accountChanged(user: AuthUser | null) {
     const saved = localData[`${BYOK_SETTINGS}:${id}`] as ByokSettings | undefined;
     byokSettings = saved && ["credits", "byok"].includes(saved.mode) ? saved : { ...DEFAULT_BYOK };
     const secret = sessionData[`${BYOK_SECRET}:${id}`] as { key?: string; baseUrl?: string; model?: string; verified?: boolean } | undefined;
-    byokKey = secret?.baseUrl === byokSettings.baseUrl && typeof secret.key === "string" ? secret.key : "";
+    const nextByokKey = secret?.baseUrl === byokSettings.baseUrl && typeof secret.key === "string" ? secret.key : "";
+    if (nextByokKey !== byokKey) byokConfigurationRevision++;
+    byokKey = nextByokKey;
     if (!busy) byokConnection = !byokKey ? "unconfigured" : secret?.verified && secret.model === byokSettings.model ? "connected" : "unverified";
   }
   renderProvider();
@@ -885,7 +999,10 @@ async function accountChanged(user: AuthUser | null) {
     }
     renderSelected();
     void refreshFavorites(false);
-    if (isByok()) {
+    if (isByok() && !pendingRequest) {
+      connectionIssue = "";
+      recoveryChecking = false;
+      status("");
       await persist();
       if (!current()) return;
       if (runningTask()?.source !== "byok" && isRunning()) poll = window.setTimeout(() => void resume(), 1000);
@@ -898,21 +1015,43 @@ async function accountChanged(user: AuthUser | null) {
     if (!current() || snapshot.operationRevision !== operationRevision) return;
     if (!data.account || typeof data.account.balance !== "number") {
       el("balance").textContent = "—";
-      throw new Error(say("Could not verify sign-in.", "登录状态验证失败。"));
+      throw Object.assign(new Error("UNAUTHENTICATED"), { httpStatus: 401 });
+    }
+    connectionIssue = "";
+    setBalance(data.account.balance);
+    if (!canRestore()) return;
+    let resolvedRequest: { requestId: string; task: Task | null } | undefined;
+    if (pendingRequest) {
+      const resolvingId = pendingRequest.requestId;
+      recoveryChecking = true;
+      status(recoveryText.pending);
+      controls();
+      const resolution = await api(`/api/reverse/requests/${encodeURIComponent(resolvingId)}/resolve`, { method: "POST" });
+      if (!current() || !canRestore()) return;
+      if (resolution.resolution !== "cancelled" && resolution.resolution !== "accepted")
+        throw new Error("invalid_recovery_response");
+      if (resolution.resolution === "accepted" && resolution.task?.requestId !== resolvingId)
+        throw new Error("invalid_recovery_response");
+      resolvedRequest = { requestId: resolvingId, task: resolution.task ?? null };
+      if (resolution.task && ["pending", "running"].includes(resolution.task.status))
+        data.activeTask = resolution.task;
+      else if (data.activeTask?.requestId === resolvingId)
+        data.activeTask = null;
+      if (data.recentTask?.requestId === resolvingId)
+        data.recentTask = resolution.task;
+      setBalance(resolution.balance);
     }
     window.clearTimeout(authRetryTimer);
     authRetryTimer = 0;
     authRetryCount = 0;
-    setBalance(data.account.balance);
-    if (!canRestore()) return;
     const decision = recoveryDecision<Task>({
+      resolvedRequest,
       active: data.activeTask,
       recent: data.recentTask,
       stored: history.entries[0]?.task,
       pending: pendingRequest,
       deletedIds: history.deleted.map((item) => item.id),
     });
-    uncertain = decision.unresolved;
     if (pendingRequest) {
       requestId = pendingRequest.requestId;
       hash = pendingRequest.hash;
@@ -933,6 +1072,9 @@ async function accountChanged(user: AuthUser | null) {
           ? { hash: pendingRequest.hash, thumbnail: pendingRequest.thumbnail }
           : {},
       );
+    if (resolvedRequest?.task && (new Date(resolvedRequest.task.expiresAt).getTime() > Date.now() || history.entries.some(entry => entry.task.id === resolvedRequest.task!.id)))
+      history = mergeTask(history, resolvedRequest.task,
+        pendingRequest ? { hash: pendingRequest.hash, thumbnail: pendingRequest.thumbnail } : {});
     if (decision.acknowledged && decision.task && !hadSelection)
       history.selectedId = decision.task.id;
     renderSelected();
@@ -943,20 +1085,22 @@ async function accountChanged(user: AuthUser | null) {
       if (!current() || !canRestore()) return;
       pendingRequest = null;
     }
+    uncertain = decision.unresolved;
+    recoveryChecking = false;
     window.clearTimeout(poll);
     if (isRunning()) poll = window.setTimeout(() => void resume(), 1000);
     if (uncertain) {
-      status(
-        say(
-          "Unconfirmed request. Upload the same image to recover without a duplicate charge.",
-          "请求尚未确认，请上传同一张图片恢复，不重复扣费。",
-        ),
-      );
+      status(recoveryText.pending);
       controls();
       return;
     }
-    if (!data.enabled)
-      status(say("Reverse is currently unavailable.", "反推服务暂不可用。"));
+    if (resolvedRequest) {
+      status(resolvedRequest.task ? recoveryText.restored : recoveryText.released);
+      controls();
+      return; // Recovery never automatically submits another paid request.
+    }
+    if (!data.enabled && !isByok())
+      status(recoveryText.disabled);
     else if (isRunning()) await consumePending();
     else if (firstLogin && loginUpload && !busy) {
       prepared = loginUpload.image;
@@ -984,17 +1128,18 @@ async function accountChanged(user: AuthUser | null) {
           ? Number(error.httpStatus)
           : 0;
       if (!httpStatus || httpStatus === 401 || httpStatus >= 500) {
-        const willRetry = authRetryCount < 3;
+        connectionIssue = recoveryText[recoveryErrorKey(error, localApi)];
         scheduleAuthRecovery();
-        status(
-          willRetry
-            ? say("Syncing account…", "正在同步账号…")
-            : say(
-                "Account unavailable · try again later",
-                "账号暂不可用 · 稍后重试",
-              ),
-        );
-      } else status(error instanceof Error ? error.message : String(error));
+        status(connectionIssue);
+      } else {
+        connectionIssue = recoveryText[recoveryErrorKey(error, localApi)];
+        status(connectionIssue);
+      }
+    }
+  } finally {
+    if (current()) {
+      recoveryChecking = false;
+      controls();
     }
   }
 }
@@ -1024,6 +1169,7 @@ async function loadBlob(blob: Blob, force = false, expectedHash?: string) {
   const account = userId,
     epoch = accountEpoch;
   const current = () => account === userId && epoch === accountEpoch;
+  if (uncertain) { status(connectionIssue || recoveryText.pending); controls(); return; }
   if (busy || isRunning()) {
     status(say("A task is already running.", "已有反推任务正在进行。"));
     return;
@@ -1144,14 +1290,22 @@ async function submit() {
     data = await api("/api/reverse", { method: "POST", body });
   } catch (error) {
     if (!current()) return;
-    if (
-      error instanceof Error &&
-      "httpStatus" in error &&
-      Number(error.httpStatus) < 500
-    ) {
+    if (definitelyRejected(error)) {
       uncertain = false;
       pendingRequest = null;
       await chrome.storage.session.remove(`request:${account}`);
+    }
+    const code = error instanceof Error ? error.message : "";
+    const message = code === "insufficient_credits" ? recoveryText.credits
+      : code === "reverse_unavailable" ? recoveryText.disabled
+      : code === "request_cancelled" ? recoveryText.cancelled
+      : code === "rate_limited" ? recoveryText.rate
+      : null;
+    if (message) throw new Error(message);
+    if (!definitelyRejected(error)) {
+      connectionIssue = recoveryText[recoveryErrorKey(error, localApi)];
+      scheduleAuthRecovery();
+      throw new Error(connectionIssue);
     }
     throw error;
   }
@@ -1314,13 +1468,13 @@ async function refreshFavorites(report = true) {
       for (const entry of favoritesHistory.entries) {
         const draft = drafts?.[entry.task.id];
         if (!entry.edited && draft && typeof draft.draft === "string" && Number.isInteger(draft.revision)) {
-          entry.draft = draft.draft.slice(0, 2000); entry.edited = true;
+          entry.draft = draft.draft; entry.edited = true;
           favoriteBaseRevision.set(entry.task.id, draft.revision);
         }
       }
       for (const [id, draft] of Object.entries(drafts ?? {})) {
         if (!favoritesHistory.entries.some(entry => entry.task.id === id) && typeof draft.draft === "string" && Number.isInteger(draft.revision) && draft.task?.id === id) {
-          favoritesHistory.entries.push({ task: draft.task, draft: draft.draft.slice(0, 2000), edited: true });
+          favoritesHistory.entries.push({ task: draft.task, draft: draft.draft, edited: true });
           favoriteBaseRevision.set(id, draft.revision);
         }
       }
@@ -1687,7 +1841,18 @@ el("chatgpt").setAttribute("aria-label", chatgptText.title);
 el("chatgptLabel").textContent = chatgptText.label;
 el("chatgpt").onclick = async () => {
   if (!task || task.status !== "succeeded" || !prompt.value.trim()) return;
-  const handoff = buildChatGPTHandoff(prompt.value, task.originalWidth, task.originalHeight);
+  const reference = posePanel.getReference();
+  const handoff = buildChatGPTHandoff(prompt.value + (reference ? `\n\n${POSE_REFERENCE_INSTRUCTION}` : ""), task.originalWidth, task.originalHeight);
+  if (reference) {
+    const account = userId, epoch = accountEpoch, id = task.id, text = prompt.value;
+    chatgptPoseDialog?.close();
+    chatgptPoseDialog = showChatGPTPoseHandoff({
+      locale, handoff, pose: reference.blob,
+      isCurrent: () => account === userId && epoch === accountEpoch && id === task?.id && text === prompt.value,
+      open: url => chrome.tabs.create({ url }),
+    });
+    return;
+  }
   let copied = false;
   try { await navigator.clipboard.writeText(handoff.text); copied = true; } catch {}
   if (handoff.requiresPaste && !copied) { status(chatgptText.copyFailed); return; }
@@ -1700,6 +1865,25 @@ el("handoff").onclick = async () => {
     epoch = accountEpoch;
   const current = () => account === userId && epoch === accountEpoch;
   if (!account || !task) return;
+  const reference = posePanel.getReference();
+  if (reference) {
+    const sourceTask = task, sourcePrompt = prompt.value;
+    if (sourcePrompt.trim().length + POSE_REFERENCE_INSTRUCTION.length + 2 > MAX_PROMPT_LENGTH) { status(poseText.handoffTooLong); return; }
+    try {
+      const image = await prepareImage(reference.blob);
+      const bytes = new Uint8Array(await image.blob.arrayBuffer());
+      let binary = "";
+      for (let offset = 0; offset < bytes.length; offset += 32768) binary += String.fromCharCode(...bytes.subarray(offset, offset + 32768));
+      if (!current() || sourceTask.id !== task?.id || sourcePrompt !== prompt.value) return;
+      const data = await api("/api/reverse/pose-handoff", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ prompt: sourcePrompt, width: sourceTask.originalWidth, height: sourceTask.originalHeight, posePng: `data:image/png;base64,${btoa(binary)}` }),
+      });
+      if (!current() || sourceTask.id !== task?.id) return;
+      await chrome.tabs.create({ url: `${config.siteOrigin}/${zh ? "zh-CN" : "en"}/generate?import=${encodeURIComponent(data.token)}` });
+    } catch { if (current()) status(poseText.handoffFailed); }
+    return;
+  }
   if (favoritesView) {
     const savedId = task.id;
     if (!(await flushFavoriteEdit()) || !current()) return;
@@ -1726,7 +1910,7 @@ el("handoff").onclick = async () => {
   }
 };
 el("retry").onclick = async () => {
-  if (busy || isRunning() || !task || !userId) return;
+  if (busy || isRunning() || uncertain || !task || !userId) return;
   if (!prepared) {
     const selectedId = task.id;
     const epoch = accountEpoch;
@@ -1768,6 +1952,18 @@ el("retry").onclick = async () => {
     }
   }
 };
+el("recoveryAction").onclick = () => {
+  if (busy || recoveryChecking) return;
+  recoveryChecking = true;
+  authRetryCount = 0;
+  window.clearTimeout(authRetryTimer);
+  authRetryTimer = 0;
+  controls();
+  void auth.refresh().catch(() => { recoveryChecking = false; controls(); });
+};
+window.addEventListener("online", () => {
+  if (!busy && (uncertain || connectionIssue)) void auth.refresh().catch(() => {});
+});
 chrome.storage.onChanged.addListener((changes, area) => {
   if (area === "session" && changes.pendingImage?.newValue) {
     pending = changes.pendingImage.newValue as Selection;
@@ -2129,6 +2325,10 @@ el("favoriteKeepMine").onclick = () => {
 };
 
 window.addEventListener("pagehide", () => {
+  posePanel.dispose();
+  cleaning.dispose();
+  disposeDialogDismissal();
+  chatgptPoseDialog?.close();
   byokModelsAbort?.abort();
   byokAbort?.abort();
   window.clearTimeout(favoriteEditTimer);

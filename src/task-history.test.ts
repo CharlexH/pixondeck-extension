@@ -109,3 +109,11 @@ test("deletion marks expire with local retention without hiding new tasks or ano
   assert.deepEqual(normalizeHistory({ version: 2, entries: [{task: old, draft: "legacy"}], selectedId: "a" }, 1500).deleted, []);
   assert.equal(normalizeHistory({ version: 2, entries: [{task: old, draft: "legacy"}], selectedId: "a" }, 1500).entries[0].draft, "legacy");
 });
+
+test("history preserves long and over-limit editable drafts without cutting text", () => {
+ for (const length of [4096, 4097]) {
+  const draft = "x".repeat(length);
+  const result = normalizeHistory({ task: task("long"), draft }, 1000);
+  assert.equal(result.entries[0].draft, draft);
+ }
+});

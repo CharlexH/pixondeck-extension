@@ -1,8 +1,6 @@
-// Keep the standalone client limited to its translated languages.
-export const languages = [
-  { code: "en", name: "English", localName: "English", dir: "ltr", enabled: true },
-  { code: "zh-CN", name: "Chinese (Simplified)", localName: "简体中文", dir: "ltr", enabled: true },
-];
+import { LOCALES } from "./shared/lib/locales";
+// Only expose languages whose extension UI is translated. Names/order come from the main site.
+export const languages = LOCALES.filter(item => item.enabled && ["en", "zh-CN"].includes(item.code));
 const key = "pixondeck:extension-language";
 export function readLanguage(browserLanguage: string) {
   const saved = localStorage.getItem(key);

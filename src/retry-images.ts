@@ -35,14 +35,21 @@ export function makeRetryImageRecord(
     typeof expiresAt === "string" ? Date.parse(expiresAt) : expiresAt;
   if (!Number.isFinite(expiry) || expiry <= now)
     throw new Error("RETRY_IMAGE_EXPIRED");
-  const size = scaledDimensions(image.originalWidth, image.originalHeight);
+  // Old 480px uploads remain reusable without re-encoding the saved Blob.
+  const matchesDimensions = ([480, 960] as const).some((maxEdge) => {
+    const size = scaledDimensions(
+      image.originalWidth,
+      image.originalHeight,
+      maxEdge,
+    );
+    return image.width === size.width && image.height === size.height;
+  });
   if (
     !(image.blob instanceof Blob) ||
     !["image/jpeg", "image/png"].includes(image.blob.type) ||
     image.blob.size === 0 ||
     image.blob.size > 2 * 1024 * 1024 ||
-    image.width !== size.width ||
-    image.height !== size.height ||
+    !matchesDimensions ||
     typeof image.artificialBackground !== "boolean" ||
     typeof image.animated !== "boolean"
   ) {

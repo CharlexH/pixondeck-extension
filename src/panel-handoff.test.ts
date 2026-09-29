@@ -15,7 +15,7 @@ function setup() {
   const errors: string[] = [];
   const requests: Array<{path:string; body:any}> = [];
   const context = {
-    favoritesView: false, flushFavoriteEdit: async () => true,
+    posePanel: { getReference: () => null }, favoritesView: false, flushFavoriteEdit: async () => true,
     userId: "account-a", accountEpoch: 1, task: { id: "task-a", source: "credits", originalWidth: 640, originalHeight: 854 },
     prompt: { value: "Original prompt" }, zh: true,
     config: { siteOrigin: "https://pixondeck.com" },

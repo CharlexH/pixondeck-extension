@@ -10,13 +10,8 @@ try {
 }
 const env = process.env;
 let devKey;
-try {
-  devKey = JSON.parse(await readFile("development-key.json", "utf8"));
-} catch (error) {
-  if (error.code !== "ENOENT") throw error;
-  await import("./create-dev-key.mjs");
-  devKey = JSON.parse(await readFile("development-key.json", "utf8"));
-}
+try { devKey = JSON.parse(await readFile("development-key.json", "utf8")); }
+catch (error) { if (error.code !== "ENOENT") throw error; await import("./create-dev-key.mjs"); devKey = JSON.parse(await readFile("development-key.json", "utf8")); }
 const publicKey = env.POD_EXTENSION_PUBLIC_KEY || (production ? undefined : devKey.publicKey);
 const config = {
   apiOrigin: env.POD_API_ORIGIN || "http://localhost:8787",
@@ -84,6 +79,25 @@ await build({
   },
   minify: true,
 });
+// The model weights remain an explicit download. All executable ONNX code is
+// packaged locally so the extension never executes remotely hosted code.
+await build({
+  entryPoints: ["src/shared/workers/pose.worker.ts"],
+  outfile: `${outdir}/pose-worker.js`,
+  bundle: true,
+  format: "esm",
+  target: "chrome116",
+  minify: true,
+});
+await mkdir(`${outdir}/pose-runtime`, { recursive: true });
+for (const suffix of ["mjs", "wasm"]) {
+  const filename = `ort-wasm-simd-threaded.${suffix}`;
+  await copyFile(`node_modules/onnxruntime-web/dist/${filename}`, `${outdir}/pose-runtime/${filename}`);
+}
+await mkdir(`${outdir}/licenses`, { recursive: true });
+for (const name of ["MMPose-APACHE-2.0.txt", "RTMLib-APACHE-2.0.txt", "ONNXRuntime-MIT.txt", "ONNXRuntime-ThirdPartyNotices.txt", "NOTICE.txt"]) {
+  await copyFile(`scripts/pose/licenses/${name}`, `${outdir}/licenses/${name}`);
+}
 await writeFile(
   `${outdir}/manifest.json`,
   JSON.stringify(
@@ -107,7 +121,7 @@ await writeFile(
       action: { default_title: "PixOnDeck", default_icon: icons },
       side_panel: { default_path: "panel.html" },
       content_security_policy: {
-        extension_pages: "script-src 'self'; object-src 'none'",
+        extension_pages: "script-src 'self' 'wasm-unsafe-eval'; object-src 'none'",
       },
       key: publicKey,
     },
@@ -133,6 +147,4 @@ for (const name of ["welcome-demo.mp4", "welcome-demo-poster.jpg"]) {
 
 if (production) console.log(`Production candidate built in ${outdir}; backend readiness and store identity still require live verification.`);
 
-for (const name of ["LICENSE", "NOTICE", "THIRD_PARTY_NOTICES.txt", "BRANDING.md"]) {
-  await copyFile(name, `${outdir}/${name}`);
-}
+for (const name of ["LICENSE", "NOTICE", "THIRD_PARTY_NOTICES.txt", "BRANDING.md"]) await copyFile(name, `${outdir}/${name}`);

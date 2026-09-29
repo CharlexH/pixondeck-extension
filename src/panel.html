@@ -48,6 +48,10 @@
       <button id="byokConfigure" class="account-menu-link" type="button" hidden></button>
       <a id="menuCredits" class="account-menu-link" target="_blank" rel="noopener noreferrer"><span class="menu-icon" id="menuCreditsIcon" aria-hidden="true"></span><span id="menuCreditsLabel"></span><strong id="menuBalance">—</strong></a>
       <hr class="mode-divider">
+      <button id="poseSettingsOpen" class="account-menu-link" type="button"><span id="poseMenuIcon" class="menu-icon" aria-hidden="true"></span><span id="poseMenuLabel"></span><span id="poseConfigure" class="pose-menu-value"></span></button>
+      <div id="poseAuto" class="account-menu-link" hidden><span id="poseAutoIcon" class="menu-icon" aria-hidden="true"></span><span id="poseAutoLabel"></span><span id="poseAutoMount" class="pose-menu-value"></span></div>
+      <div id="poseGeneration" class="account-menu-link" hidden><svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 21c4.21-4.751 8.941-11.052 16-6.327"/><path stroke-linecap="round" stroke-linejoin="round" d="M17 4.5c.491-.506 1.8-2.5 2.5-2.5M22 4.5c-.491-.506-1.8-2.5-2.5-2.5m0 0v8"/><path stroke-linecap="round" d="M21 13c-.002 4.147-.053 6.27-1.391 7.609C18.217 22 15.979 22 11.5 22c-4.478 0-6.718 0-8.109-1.391S2 16.979 2 12.5c0-4.478 0-6.718 1.391-8.109S7.021 3 11.5 3H14"/></g></svg><span id="poseGenerationLabel"></span><span id="poseGenerationMount" class="pose-menu-value"></span></div>
+      <hr class="mode-divider">
       <a id="menuReleases" class="account-menu-link" target="_blank" rel="noopener noreferrer"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="m12.88 7.017l4.774 1.271m-5.796 2.525l2.386.636m-2.267 6.517l.954.255c2.7.72 4.05 1.079 5.114.468c1.063-.61 1.425-1.953 2.148-4.637l1.023-3.797c.724-2.685 1.085-4.027.471-5.085s-1.963-1.417-4.664-2.136l-.954-.255c-2.7-.72-4.05-1.079-5.113-.468c-1.064.61-1.426 1.953-2.15 4.637l-1.022 3.797c-.724 2.685-1.086 4.027-.471 5.085c.614 1.057 1.964 1.417 4.664 2.136Z" /><path d="m12 20.946l-.952.26c-2.694.733-4.04 1.1-5.102.477c-1.06-.622-1.422-1.991-2.143-4.728l-1.021-3.872c-.722-2.737-1.083-4.106-.47-5.184C2.842 6.966 4 7 5.5 7" /></svg><span id="menuReleasesLabel"></span></a>
       <button id="menuLanguage" class="account-menu-link menu-language" aria-expanded="false" aria-controls="languageOptions"><svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" /><path d="M8 12c0 6 4 10 4 10s4-4 4-10s-4-10-4-10s-4 4-4 10Z" /><path d="M21 15H3m18-6H3" /></svg><span id="menuLanguageLabel"></span><span id="currentLanguage"></span><svg class="language-chevron" aria-hidden="true" viewBox="0 0 24 24"><path d="m9 5 7 7-7 7"/></svg></button><div id="languageOptions" class="language-options" hidden></div>
       <a id="menuSupport" class="account-menu-link" target="_blank" rel="noopener noreferrer"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="m7 8.5l2.942 1.74c1.715 1.014 2.4 1.014 4.116 0L17 8.5" /><path d="M2.016 13.476c.065 3.065.098 4.598 1.229 5.733c1.131 1.136 2.705 1.175 5.854 1.254c1.94.05 3.862.05 5.802 0c3.149-.079 4.723-.118 5.854-1.254c1.131-1.135 1.164-2.668 1.23-5.733c.02-.986.02-1.966 0-2.952c-.066-3.065-.099-4.598-1.23-5.733c-1.131-1.136-2.705-1.175-5.854-1.254a115 115 0 0 0-5.802 0c-3.149.079-4.723.118-5.854 1.254c-1.131 1.135-1.164 2.668-1.23 5.733a69 69 0 0 0 0 2.952Z" /></svg><span id="menuSupportLabel"></span></a>
@@ -62,9 +66,10 @@
       <main>
         <section class="prompt-card">
           <div id="taskToolbar" class="task-toolbar" hidden>
-            <span id="taskInfo"></span><button id="retry" class="text-button" disabled></button>
+            <span id="taskInfo"></span><button id="cleanPrompt" class="text-button task-icon-button" type="button" hidden></button><button id="poseRecognize" class="text-button task-icon-button" type="button" hidden></button><button id="retry" class="text-button" disabled></button>
           </div>
           <p id="status" role="status" aria-live="polite" hidden></p>
+          <button id="recoveryAction" class="text-button" type="button" hidden></button>
           <div id="favoriteConflict" class="favorite-conflict" hidden><button id="favoriteLoadCloud" type="button"></button><button id="favoriteKeepMine" type="button"></button></div>
           <button id="permission" hidden></button>
           <section id="emptyState" class="empty-state" aria-labelledby="emptyTitle" hidden>
@@ -77,9 +82,10 @@
             <button id="emptyUpload" type="button"></button>
             <p id="emptyHint" class="empty-hint"></p>
           </section>
+          <p id="poseStatus" class="pose-status" role="status" aria-live="polite" hidden></p>
           <div id="taskContent" role="tabpanel" hidden>
             <div class="prompt-editor">
-              <textarea id="prompt" maxlength="1800" rows="16"></textarea>
+              <textarea id="prompt" maxlength="4096" rows="16"></textarea>
               <div id="promptLoading" role="status" aria-live="polite" hidden><span class="loading-spinner" aria-hidden="true"></span><span id="promptLoadingText"></span></div>
             </div>
             <div class="actions">
@@ -148,6 +154,24 @@
         </div>
       </aside>
     </div>
+    <dialog id="cleanConfirm" class="pose-dialog action-confirm" aria-labelledby="cleanConfirmTitle">
+      <h2 id="cleanConfirmTitle"></h2><p id="cleanConfirmDescription"></p>
+      <div class="pose-actions"><button id="cleanConfirmCancel" type="button"></button><button id="cleanConfirmStart" class="primary" type="button"></button></div>
+    </dialog>
+    <dialog id="poseConfirm" class="pose-dialog action-confirm" aria-labelledby="poseConfirmTitle">
+      <h2 id="poseConfirmTitle"></h2><p id="poseConfirmDescription"></p>
+      <div class="pose-actions"><button id="poseConfirmCancel" type="button"></button><button id="poseConfirmStart" class="primary" type="button"></button></div>
+    </dialog>
+    <dialog id="poseSettings" class="pose-dialog" aria-labelledby="poseSettingsTitle">
+      <h2 id="poseSettingsTitle"></h2><p id="poseDescription"></p>
+      <div class="pose-model-progress"><p id="poseModelStatus" role="status" aria-live="polite"></p><progress id="poseProgress" max="1" value="0" hidden></progress></div>
+      <div class="pose-actions"><button id="poseSettingsClose" type="button"></button><button id="poseCancelDownload" type="button" hidden></button><button id="poseDownload" type="button"></button><button id="poseDelete" type="button" hidden></button></div>
+    </dialog>
+    <dialog id="poseViewer" class="image-preview pose-viewer">
+      <button id="poseViewerClose" class="image-preview-close" type="button"></button>
+      <img id="posePreview" alt="">
+      <div class="pose-footer"><div class="pose-overlay-control"><label id="poseOverlayLabel" for="poseOverlay"></label><span id="poseOverlayMount"></span></div><div class="pose-footer-actions"><button id="poseDownloadPng" type="button"></button><button id="poseDownloadJson" type="button"></button></div></div>
+    </dialog>
     <dialog id="byokDialog" class="byok-dialog" aria-labelledby="byokTitle">
       <form id="byokForm" novalidate>
         <h2 id="byokTitle"></h2>

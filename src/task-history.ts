@@ -1,4 +1,6 @@
 export const HISTORY_LIMIT = 140;
+// Matches the site free-prompt engineering limit; recovered text is never cut.
+export const MAX_PROMPT_LENGTH = 4096;
 export const LOCAL_RETENTION_MS = 7 * 24 * 60 * 60 * 1000;
 export const THUMBNAIL_MAX_LENGTH = 44_000;
 export type Task = {
@@ -99,7 +101,7 @@ export function normalizeHistory(
       ...entry,
       draft:
         typeof entry.draft === "string"
-          ? entry.draft.slice(0, 1800)
+          ? entry.draft
           : (entry.task.prompt ?? ""),
       edited: Boolean(entry.edited),
       thumbnail: validThumbnail(entry.thumbnail) ? entry.thumbnail : undefined,

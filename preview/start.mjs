@@ -6,8 +6,9 @@ import { build } from 'esbuild';
 const root = fileURLToPath(new URL('../', import.meta.url));
 const source = resolve(root, 'src');
 async function revision() {
+  const previewFiles = (await readdir(resolve(root,'preview'))).filter(x => /\.(ts|mjs)$/.test(x));
   const files = (await readdir(source)).filter(x => /\.(ts|css|html)$/.test(x));
-  return String(Math.max((await stat(resolve(root,'preview/bootstrap.ts'))).mtimeMs,...await Promise.all(files.map(async x => (await stat(resolve(source,x))).mtimeMs))));
+  return String(Math.max(...await Promise.all(previewFiles.map(async x => (await stat(resolve(root,'preview',x))).mtimeMs)),...await Promise.all(files.map(async x => (await stat(resolve(source,x))).mtimeMs))));
 }
 http.createServer(async (req,res) => {
   try {
@@ -15,8 +16,13 @@ http.createServer(async (req,res) => {
     res.setHeader('Cache-Control','no-store');
     if (path === '/revision') { res.end(await revision()); return; }
     if (path === '/panel.js') {
-      const result = await build({ entryPoints:[resolve(root,'preview/bootstrap.ts')], bundle:true, write:false, format:'iife', target:'chrome116', plugins:[{name:'preview-auth',setup(b){b.onResolve({filter:/^\.\/auth$/},()=>({path:resolve(root,'preview/auth.ts')}));}}], define:{__CONFIG__:JSON.stringify({apiOrigin:'http://preview.invalid',siteOrigin:'http://preview.invalid',publishableKey:'preview',syncHost:'http://preview.invalid'})} });
+      const result = await build({ entryPoints:[resolve(root,'preview/bootstrap.ts')], bundle:true, write:false, format:'iife', target:'chrome116', plugins:[{name:'preview-auth',setup(b){b.onResolve({filter:/^\.\/auth$/},()=>({path:resolve(root,'preview/auth.ts')}));b.onResolve({filter:/^\.\/pose-runtime$/},()=>({path:resolve(root,'preview/pose-runtime.ts')}));}}], define:{__CONFIG__:JSON.stringify({apiOrigin:'http://preview.invalid',siteOrigin:'http://preview.invalid',publishableKey:'preview',syncHost:'http://preview.invalid'})} });
       res.setHeader('Content-Type','text/javascript');res.end(result.outputFiles[0].text);return;
+    }
+    if (/^\/models\/pose\/[a-f0-9]+\/\d+\.bin$/.test(path) || /^\/pose-runtime\/ort-wasm-simd-threaded\.(mjs|wasm)$/.test(path) || path === '/pose-worker.js') {
+      const file = path.startsWith('/models/') ? resolve(root, 'assets' + path) : resolve(root, 'dist' + path);
+      res.setHeader('Content-Type', /\.(mjs|js)$/.test(path) ? 'text/javascript' : path.endsWith('.wasm') ? 'application/wasm' : 'application/octet-stream');
+      res.end(await readFile(file)); return;
     }
     const samples = ['icon-set/dev-01.png','logo-design/dev-01.png','logo-design/dev-02.png','ip-as-logo/b1.png','ip-as-logo/b2.png','logo-design/dev-05.png','logo-design/dev-06.png','logo-design/dev-07.png','icon-set/dev-02.png','icon-set/dev-03.png'];
     const files = {'/assets/welcome-demo.mp4':resolve(source,'assets/welcome-demo.mp4'),'/assets/welcome-demo-poster.jpg':resolve(source,'assets/welcome-demo-poster.jpg'),'/':resolve(source,'panel.html'),'/panel.css':resolve(source,'panel.css'),'/logo.svg':resolve(root,'assets/logo.svg'),'/icon.png':resolve(root,'assets/icon.png'),'/sample1.png':resolve(root,'src/assets/icon-128.png'),'/sample2.png':resolve(root,'src/assets/icon-128.png')};

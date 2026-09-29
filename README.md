@@ -8,7 +8,7 @@
 
 **English** · [简体中文](README.zh-CN.md)
 
-[![Download ZIP](https://img.shields.io/badge/Download_ZIP-Manual_install-6D4AFF?style=for-the-badge)](https://github.com/CharlexH/pixondeck-extension/releases/download/v1.0.1/pixondeck-chrome-1.0.1-manual-install.zip)
+[![Download ZIP](https://img.shields.io/badge/Download_ZIP-Manual_install-6D4AFF?style=for-the-badge)](https://github.com/CharlexH/pixondeck-extension/releases/download/v1.1.0/pixondeck-chrome-1.1.0-manual-install.zip)
 [![Chrome Web Store — coming soon](https://img.shields.io/badge/Chrome_Web_Store-Coming_soon-64748B?style=for-the-badge)](#chrome-web-store)
 [![Website](https://img.shields.io/badge/Visit-PixOnDeck-18181B?style=for-the-badge)](https://pixondeck.com/extension?utm_source=github&utm_medium=referral&utm_campaign=extension_open_source&utm_content=readme_website)
 
@@ -52,7 +52,7 @@ Actual client UI replaying the example prompts above. Account and favorites are 
 
 Requires desktop **Chrome 116 or later**. Managed work or school browsers may restrict developer-mode installation.
 
-1. **[Download the manual-install ZIP](https://github.com/CharlexH/pixondeck-extension/releases/download/v1.0.1/pixondeck-chrome-1.0.1-manual-install.zip).** Choose `pixondeck-chrome-1.0.1-manual-install.zip`, not GitHub’s automatic **Source code** downloads.
+1. **[Download the manual-install ZIP](https://github.com/CharlexH/pixondeck-extension/releases/download/v1.1.0/pixondeck-chrome-1.1.0-manual-install.zip).** Choose `pixondeck-chrome-1.1.0-manual-install.zip`, not GitHub’s automatic **Source code** downloads.
 2. **Extract it into a permanent folder**, such as `Documents/PixOnDeck-extension`. Keep that folder after installation.
 3. **Open Chrome’s extension manager.** Paste `chrome://extensions` into the address bar.
 4. **Turn on Developer mode** in the upper-right corner.
@@ -88,6 +88,15 @@ These steps follow [Chrome’s official unpacked-extension guide](https://develo
 
 BYOK settings are in the account menu. An image-to-prompt result is an AI interpretation, not recovery of the image’s original prompt. Website image generation is a separate, user-initiated action.
 
+## New in 1.1.0
+
+- **Prompt cleaning:** remove explicit descriptions while retaining the rest of the prompt. Credit mode costs 1 credit per new cleaning operation; BYOK uses your provider without PixOnDeck credits. Keep the original and cleaned versions and switch between them without another cleaning charge. Editing is not a guarantee of acceptance by any image service.
+- **Local pose recognition:** download the model once, then detect on your device. Inspect a pure skeleton or an original-image overlay and export PNG or JSON. Model downloads, deletion and automatic recognition are in the account menu.
+- **Pose references:** enable “Attach pose image” to include the pure skeleton in PixOnDeck generation. ChatGPT handoff guides you through copying/pasting or downloading the image; it does not automatically attach or submit it.
+- **Shared reverse-v7 instructions:** credit and BYOK modes use the same six-section prompt specification. Image input is resized to a maximum 960-pixel edge; output is limited to 4,096 characters. The source keeps reverse-v6 for rollback.
+
+Local pose recognition does not consume PixOnDeck credits. Model weights are downloaded separately and are not included in the source repository or extension ZIP; see [pose resources](docs/pose-resources.md).
+
 ## Why PixOnDeck?
 
 | Feature | What it helps you do |
@@ -120,7 +129,7 @@ Still stuck? [Report a reproducible issue](https://github.com/CharlexH/pixondeck
 
 ## Privacy and permissions
 
-- Only selected images are submitted for analysis. The client reduces image-to-prompt inputs to a maximum **480-pixel edge**.
+- Only selected images are submitted for analysis. The client reduces image-to-prompt inputs to a maximum **960-pixel edge**.
 - Credit-mode images go to PixOnDeck and its processing providers. BYOK images and credentials go directly to your configured provider.
 - BYOK keys remain in trusted **extension session storage**, not persistent settings or PixOnDeck requests.
 - Saving a cloud favorite sends its prompt and thumbnail to your PixOnDeck account.
@@ -147,7 +156,7 @@ npm run build
 
 Load `dist/` at `chrome://extensions`. Unlike the official manual-install package, the default source build creates a local development identity and has no live authentication configuration. A successful build alone does not grant access to production services. See [development and service requirements](docs/development.md).
 
-`npm run preview` starts the fixture interface at `http://127.0.0.1:8791`. It uses simulated data; use dummy keys only.
+`npm run preview` starts the fixture interface at `http://127.0.0.1:8791`. Account, reverse and cleaning requests use simulated data; use dummy keys only. Pose inference uses the real packaged runtime and requires separately prepared model files.
 
 </details>
 

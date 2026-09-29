@@ -8,7 +8,7 @@
 
 [English](README.md) · **简体中文**
 
-[![下载 ZIP · 手动安装](https://img.shields.io/badge/下载_ZIP-手动安装-6D4AFF?style=for-the-badge)](https://github.com/CharlexH/pixondeck-extension/releases/download/v1.0.1/pixondeck-chrome-1.0.1-manual-install.zip)
+[![下载 ZIP · 手动安装](https://img.shields.io/badge/下载_ZIP-手动安装-6D4AFF?style=for-the-badge)](https://github.com/CharlexH/pixondeck-extension/releases/download/v1.1.0/pixondeck-chrome-1.1.0-manual-install.zip)
 [![Chrome 商店 · 尚未上架](https://img.shields.io/badge/Chrome_商店-尚未上架-64748B?style=for-the-badge)](#chrome-商店)
 [![访问 PixOnDeck](https://img.shields.io/badge/访问-PixOnDeck-18181B?style=for-the-badge)](https://pixondeck.com/extension?utm_source=github&utm_medium=referral&utm_campaign=extension_open_source&utm_content=readme_zh_website)
 
@@ -52,7 +52,7 @@
 
 需要桌面版 **Chrome 116 或更新版本**。公司或学校管理的浏览器可能限制开发者模式。
 
-1. **[下载手动安装 ZIP](https://github.com/CharlexH/pixondeck-extension/releases/download/v1.0.1/pixondeck-chrome-1.0.1-manual-install.zip)。** 选择 `pixondeck-chrome-1.0.1-manual-install.zip`，不要选择 GitHub 自动提供的 **Source code** 源码包。
+1. **[下载手动安装 ZIP](https://github.com/CharlexH/pixondeck-extension/releases/download/v1.1.0/pixondeck-chrome-1.1.0-manual-install.zip)。** 选择 `pixondeck-chrome-1.1.0-manual-install.zip`，不要选择 GitHub 自动提供的 **Source code** 源码包。
 2. **解压到固定文件夹**，例如 `文稿/PixOnDeck-extension`。安装后保留这个文件夹，不要删除或随意移动。
 3. **打开扩展管理页**：在 Chrome 地址栏粘贴 `chrome://extensions` 并回车。
 4. **开启右上角的「开发者模式」**。
@@ -88,6 +88,15 @@ PixOnDeck-extension/
 
 BYOK 在账号菜单里配置。反推结果是 AI 对图片的理解，不能保证找回原作者的提示词。官网图片生成是另外的主动操作。
 
+## 1.1.0 新增功能
+
+- **提示词清洗**：删除露骨描述，保留原版和清洗版。积分模式每次新清洗消耗 1 积分；BYOK 不消耗 PixOnDeck 积分，但供应商可能收费。之后免费切换两个版本，不保证通过任何平台审核。
+- **本地姿态识别**：手动下载模型后，在设备上识别；可查看纯骨架或原图叠加，导出 PNG 或 JSON。在账户菜单配置模型、删除模型和反推自动识别。
+- **携带姿态图**：开启后，向 PixOnDeck 生成页附带纯骨架参考。ChatGPT 流程引导复制粘贴或下载姿态图，不会自动上传或提交生成。
+- **统一反推指令**：积分与 BYOK 共用 reverse-v7 六段式指令，图片最长边不超过 960 像素，输出最多 4,096 字符；源码保留 reverse-v6 回退版本。
+
+本地姿态识别不消耗积分。模型权重单独下载，不包含在源码仓库或插件 ZIP 中，详见[姿态模型资源](docs/pose-resources.md)。
+
 ## 可以做什么
 
 | 功能 | 用途 |
@@ -120,7 +129,7 @@ BYOK 在账号菜单里配置。反推结果是 AI 对图片的理解，不能�
 
 ## 隐私与权限
 
-- 只提交你选取的图片，反推前在本地缩至最长边不超过 **480 像素**。
+- 只提交你选取的图片，反推前在本地缩至最长边不超过 **960 像素**。
 - 积分模式发送到 PixOnDeck 及其处理服务；BYOK 直接发送到你配置的供应商。
 - BYOK Key 保存在可信的**扩展会话存储**中，不写入持久设置，也不发送给 PixOnDeck。
 - 主动云收藏时，提示词与缩略图会保存到 PixOnDeck 账号。
@@ -147,7 +156,7 @@ npm run build
 
 在 `chrome://extensions` 加载 `dist/`。与官方手动安装包不同，默认源码构建会生成本地开发身份，且没有正式登录配置。构建成功不代表已获准访问生产服务。[完整开发说明](docs/development.md)。
 
-运行 `npm run preview`，打开 `http://127.0.0.1:8791` 可查看模拟数据界面。仅使用假 Key。
+运行 `npm run preview`，打开 `http://127.0.0.1:8791` 可查看界面；账号、反推与清洗请求使用模拟数据，仅使用假 Key。姿态识别使用真实运行时，需单独准备模型文件。
 
 </details>
 

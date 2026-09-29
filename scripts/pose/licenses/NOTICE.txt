@@ -1,0 +1,20 @@
+PixOnDeck local pose inference assets
+
+Model binaries are unchanged ONNX exports, split into numbered transport chunks.
+Concatenating the chunks restores each original file byte for byte.
+No training images or datasets are distributed.
+
+YOLOX-M HumanArt detector and RTMW cocktail14 pose checkpoint:
+Published by OpenMMLab; mirrored by RTMPose/RTMLib maintainer Tau-J.
+Model repository declares Apache-2.0:
+https://huggingface.co/Tau-J/RTMPose/tree/cd4d7095f5cfc9cfc4f46289bee91ea4a1e1d9fd
+Copyright 2018-2020 Open-MMLab. All rights reserved.
+See MMPose-APACHE-2.0.txt for the retained upstream license.
+RTMLib attribution/license retained in RTMLib-APACHE-2.0.txt.
+
+Runtime: ONNX Runtime Web 1.29.0, Microsoft Corporation, MIT.
+See ONNXRuntime-MIT.txt and ONNXRuntime-ThirdPartyNotices.txt.
+
+Source URLs, artifact checksums, model naming, and the distinction between
+model and training-dataset terms are recorded in:
+docs/operations/2026-09-30-pose-model-distribution.md

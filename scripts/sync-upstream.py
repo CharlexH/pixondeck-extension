@@ -2,6 +2,7 @@
 from pathlib import Path
 import argparse
 import json
+import re
 import subprocess
 
 parser = argparse.ArgumentParser(description=__doc__)
@@ -26,10 +27,10 @@ for folder in ('src', 'preview'):
             raise SystemExit('Unexpected symlink in upstream client.')
         if path.is_file():
             # Explicit source/media extensions, not arbitrary future files.
-            if path.suffix not in {'.ts', '.html', '.css', '.mjs', '.png', '.jpg', '.mp4'}:
+            if path.suffix not in {'.ts', '.tsx', '.html', '.css', '.mjs', '.png', '.jpg', '.mp4'}:
                 raise SystemExit(f'Review new upstream file type: {path.name}')
             files[path.relative_to(extension).as_posix()] = path.read_bytes()
-for name in ('scripts/build.mjs', 'scripts/create-dev-key.mjs', 'scripts/package-production.py', 'scripts/clerk-ui-disabled.ts', 'tsconfig.json', 'package-lock.json'):
+for name in ('scripts/build.mjs', 'scripts/create-dev-key.mjs', 'scripts/package-production.py', 'scripts/clerk-ui-disabled.ts', 'scripts/verify-pose-package.mjs', 'tsconfig.json', 'package-lock.json'):
     files[name] = (extension / name).read_bytes()
 for old, new in [('public/favicon.ico', 'assets/favicon.ico'), ('public/icon.png', 'assets/icon.png'), ('public/images/logo.svg', 'assets/logo.svg')]:
     files[new] = (source / old).read_bytes()
@@ -46,10 +47,13 @@ try {
   await import("./create-dev-key.mjs");
   devKey = JSON.parse(await readFile("development-key.json", "utf8"));
 }''')
+text = text.replace('../../src/workers/pose.worker.ts', 'src/shared/workers/pose.worker.ts').replace('../../node_modules/onnxruntime-web', 'node_modules/onnxruntime-web').replace('../../scripts/pose/licenses/', 'scripts/pose/licenses/')
 text += '\nfor (const name of ["LICENSE", "NOTICE", "THIRD_PARTY_NOTICES.txt", "BRANDING.md"]) {\n  await copyFile(name, `${outdir}/${name}`);\n}\n'
 files[name] = text.encode()
 name = 'scripts/package-production.py'
 files[name] = replace_once(files[name].decode(), "root.parents[1] / 'outputs' / 'chrome-store'", "root / 'artifacts'").encode()
+name = 'scripts/verify-pose-package.mjs'
+files[name] = files[name].decode().replace('../../node_modules/onnxruntime-web', 'node_modules/onnxruntime-web').encode()
 name = 'src/language.ts'
 files[name] = replace_once(files[name].decode(), 'import { LOCALES } from "../../../src/lib/locales";\n// Only expose languages whose extension UI is translated. Names/order come from the main site.\nexport const languages = LOCALES.filter(item => item.enabled && ["en", "zh-CN"].includes(item.code));', '''// Keep the standalone client limited to its translated languages.
 export const languages = [
@@ -60,13 +64,42 @@ name = 'preview/start.mjs'
 text = files[name].decode()
 for old, new in [('../../public/images/logo.svg','assets/logo.svg'), ('../../public/icon.png','assets/icon.png'), ('../../public/images/cards/icon-set/dev-01.png','src/assets/icon-128.png'), ('../../public/images/cards/logo-design/dev-01.png','src/assets/icon-128.png'), ("resolve(root,'../../public/images/cards',file)","resolve(root,'src/assets/icon-128.png')")]:
     text = replace_once(text, old, new)
-files[name] = text.encode()
+files[name] = text.replace("'../../public' + path", "'assets' + path").encode()
+# Standalone, browser-only dependencies. Never copy the hosted reverse backend.
+shared = ['lib/locales.ts', 'lib/utils.ts', 'components/ui/switch.tsx',
+          'lib/reverse/prompt.ts', 'lib/reverse/prompt-cleaning.ts',
+          'lib/reverse/prompts/reverse-v6.ts', 'lib/reverse/prompts/reverse-v7.ts',
+          'workers/pose.worker.ts']
+shared += ['lib/pose/' + name + '.ts' for name in
+           ['client', 'model-cache', 'model-manifest', 'protocol', 'render', 'inference', 'geometry']]
+for name in shared:
+    files['src/shared/' + name] = ((source / 'src' / name).read_text().rstrip() + '\n').encode()
+pose = (source / 'src/lib/generation/pose-input.ts').read_text()
+constant = re.search(r'export const POSE_REFERENCE_INSTRUCTION\s*=\s*\n?\s*"[^"\n]*";', pose)
+if not constant: raise SystemExit('Review changed pose instruction export.')
+files['src/shared/lib/generation/pose-reference.ts'] = (constant.group(0) + '\n').encode()
+for name in list(files):
+    if name.startswith('src/') and not name.startswith('src/shared/') and name.endswith(('.ts', '.tsx')):
+        files[name] = files[name].decode().replace('../../../src/', './shared/').replace('./shared/lib/generation/pose-input', './shared/lib/generation/pose-reference').encode()
+for name in ['MMPose-APACHE-2.0.txt', 'RTMLib-APACHE-2.0.txt', 'ONNXRuntime-MIT.txt', 'ONNXRuntime-ThirdPartyNotices.txt', 'NOTICE.txt']:
+    files['scripts/pose/licenses/' + name] = (source / 'scripts/pose/licenses' / name).read_bytes()
+files['docs/operations/2026-09-30-pose-model-distribution.md'] = (source / 'docs/operations/2026-09-30-pose-model-distribution.md').read_bytes()
+config = json.loads(files['tsconfig.json'])
+config['compilerOptions']['baseUrl'] = '.'
+config['compilerOptions']['paths'] = {'@/*': ['src/shared/*']}
+config['include'] = ['src/**/*.ts', 'src/**/*.tsx']
+files['tsconfig.json'] = (json.dumps(config, indent=2) + '\n').encode()
 package = json.loads((extension / 'package.json').read_text())
 public = json.loads((root / 'package.json').read_text())
 for key in ('description', 'license', 'homepage', 'repository', 'bugs', 'engines'):
     package[key] = public[key]
+upstream = json.loads((source / 'package.json').read_text())
+for dependency in ['react', 'react-dom', '@radix-ui/react-switch', 'clsx', 'tailwind-merge', 'onnxruntime-web']:
+    package['dependencies'][dependency] = upstream['dependencies'][dependency]
+for dependency in ['@types/react', '@types/react-dom']:
+    package['devDependencies'][dependency] = upstream['devDependencies'][dependency]
 package['devDependencies']['jsdom'] = public['devDependencies']['jsdom']
-for key in ('notices', 'prebuild', 'prebuild:production'):
+for key in ('notices', 'prebuild', 'prebuild:production', 'package:manual'):
     package['scripts'][key] = public['scripts'][key]
 files['package.json'] = (json.dumps(package, indent=2)+'\n').encode()
 manifest = root / 'scripts/upstream-files.json'

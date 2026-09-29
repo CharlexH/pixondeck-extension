@@ -46,3 +46,7 @@ git diff
 ```
 
 The apply step requires a clean public checkout. It copies only client source, preview fixtures, selected build scripts and assets; preserves public documentation and environment templates; reapplies standalone adaptations; refreshes the lockfile; and removes only previously managed files no longer present upstream. Review changes for sensitive content and new dependencies before publishing. Structural changes stop the adapter for manual review. It never commits or pushes. Website-only changes normally need no client sync; changed API contracts may still require a coordinated client release.
+
+### Official manual-install identity
+
+`npm run package:manual` uses `manual-install-key.json` (public key only) to retain the released extension ID `abghgbjbefmiakmklkkoabgbeengkkgd`, then writes `artifacts/pixondeck-chrome-<version>-manual-install.zip` and its `.zip.sha256` checksum. Configure the authorized production origins and Clerk publishable key as above; these service settings are distinct from extension identity. Never include private signing keys in this repository. A fork should create its own identity and service configuration.

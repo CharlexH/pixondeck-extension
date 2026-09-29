@@ -50,3 +50,53 @@ test("expired results cannot restore their local draft", () => {
     { task: null, unresolved: false, acknowledged: false },
   );
 });
+
+test("authoritative resolution releases an expired request without restoring expired content", () => {
+  const old = task("old", 1000);
+  assert.deepEqual(
+    recoveryDecision({
+      pending: { requestId: old.requestId, hash: "old-image" },
+      resolvedRequest: { requestId: old.requestId, task: old },
+      now: 2000,
+    }),
+    { task: null, unresolved: false, acknowledged: true },
+  );
+});
+
+test("server cancellation releases an orphan pending request, but a different request cannot", () => {
+  const pending = { requestId: "orphan", hash: "image" };
+  assert.equal(
+    recoveryDecision({
+      pending,
+      resolvedRequest: { requestId: "orphan", task: null },
+    }).unresolved,
+    false,
+  );
+  assert.equal(
+    recoveryDecision({
+      pending,
+      resolvedRequest: { requestId: "other", task: null },
+    }).unresolved,
+    true,
+  );
+  assert.equal(recoveryDecision({ pending }).unresolved, true);
+});
+
+test("recovery of an older request does not hide a different active task", () => {
+  const active = task("active", 5000),
+    old = task("old");
+  assert.deepEqual(
+    recoveryDecision({
+      active,
+      pending: { requestId: old.requestId, hash: "image" },
+      resolvedRequest: { requestId: old.requestId, task: old },
+      now: 1000,
+    }),
+    { task: active, unresolved: false, acknowledged: true },
+  );
+});
+
+test("an active task must keep being tracked even after its content expiry", () => {
+  const active = task("active", 1000);
+  assert.equal(recoveryDecision({ active, now: 2000 }).task, active);
+});

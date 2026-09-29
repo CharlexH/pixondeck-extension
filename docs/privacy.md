@@ -5,7 +5,7 @@ This guide describes the published source, not a guarantee about every provider 
 | Feature | Destination and storage |
 | --- | --- |
 | Web image selection | User-selected image URL is retrieved for processing; pending selection can remain in extension session storage for up to one hour |
-| Image preparation | Resizing happens locally; image-to-prompt uploads have a maximum 480-pixel edge |
+| Image preparation | Resizing happens locally; image-to-prompt uploads have a maximum 960-pixel edge |
 | Credit-mode analysis | Prepared image goes to PixOnDeck's backend and its processing providers |
 | BYOK analysis | Prepared image and API key go directly to the configured compatible HTTPS provider |
 | BYOK key | Account/endpoint-bound extension session storage; not persistent settings, Chrome Sync or PixOnDeck requests |
@@ -24,3 +24,9 @@ Closing the side panel can interrupt a BYOK request; the provider may still bill
 | `cookies` | Synchronize shared authentication with the configured site |
 
 Chrome internal pages, the extension store, CSS backgrounds, canvas and cross-origin frames are not supported capture surfaces. Local upload is the fallback. See [official privacy policy](https://pixondeck.com/en/privacy).
+
+## Cleaning and local pose features
+
+Prompt cleaning sends the selected prompt text to PixOnDeck in credit mode or directly to the configured BYOK provider. Both versions are cached locally for version switching. Local pose detection runs inside a worker after an explicit model download; model weights are cached in browser Cache Storage and can be deleted. Pose results and preview images are retained locally for reuse.
+
+When attaching pose references to PixOnDeck generation, the client uploads the pure skeleton and prompt for a temporary authenticated handoff. Original-image overlays are preview/export choices and are not the generation reference. ChatGPT transfer uses the clipboard or an explicit image download; you perform the final paste/upload and generation.

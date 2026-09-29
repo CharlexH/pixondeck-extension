@@ -1,5 +1,9 @@
 export const MAX_FILE = 20 * 1024 * 1024;
-export function scaledDimensions(width: number, height: number) {
+export function scaledDimensions(
+  width: number,
+  height: number,
+  maxEdge: 480 | 960 = 960,
+) {
   if (
     !Number.isInteger(width) ||
     !Number.isInteger(height) ||
@@ -8,7 +12,7 @@ export function scaledDimensions(width: number, height: number) {
     width * height > 25_000_000
   )
     throw new Error("IMAGE_DIMENSIONS");
-  const scale = Math.min(1, 480 / Math.max(width, height));
+  const scale = Math.min(1, maxEdge / Math.max(width, height));
   return {
     width: Math.max(1, Math.round(width * scale)),
     height: Math.max(1, Math.round(height * scale)),
