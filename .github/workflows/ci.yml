@@ -13,6 +13,7 @@ jobs:
         with:
           node-version: '22'
           cache: npm
+      - run: node scripts/verify-portable-lock.mjs
       - run: npm ci
       - run: npm run typecheck
       - run: npm test

@@ -30,7 +30,7 @@ for folder in ('src', 'preview'):
             if path.suffix not in {'.ts', '.tsx', '.html', '.css', '.mjs', '.png', '.jpg', '.mp4'}:
                 raise SystemExit(f'Review new upstream file type: {path.name}')
             files[path.relative_to(extension).as_posix()] = path.read_bytes()
-for name in ('scripts/build.mjs', 'scripts/create-dev-key.mjs', 'scripts/package-production.py', 'scripts/clerk-ui-disabled.ts', 'scripts/verify-pose-package.mjs', 'tsconfig.json', 'package-lock.json'):
+for name in ('scripts/build.mjs', 'scripts/create-dev-key.mjs', 'scripts/package-production.py', 'scripts/clerk-ui-disabled.ts', 'scripts/verify-pose-package.mjs', 'tsconfig.json'):
     files[name] = (extension / name).read_bytes()
 for old, new in [('public/favicon.ico', 'assets/favicon.ico'), ('public/icon.png', 'assets/icon.png'), ('public/images/logo.svg', 'assets/logo.svg')]:
     files[new] = (source / old).read_bytes()
@@ -102,6 +102,7 @@ package['devDependencies']['jsdom'] = public['devDependencies']['jsdom']
 for key in ('notices', 'prebuild', 'prebuild:production', 'package:manual'):
     package['scripts'][key] = public['scripts'][key]
 files['package.json'] = (json.dumps(package, indent=2)+'\n').encode()
+files['package-lock.json'] = (root / 'package-lock.json').read_bytes()
 manifest = root / 'scripts/upstream-files.json'
 previous = set(json.loads(manifest.read_text())) if manifest.exists() else set()
 removed = previous - files.keys()
@@ -127,4 +128,5 @@ for name, data in files.items():
     path.write_bytes(data)
 manifest.write_text(json.dumps(sorted(files), indent=2)+'\n')
 subprocess.run(['npm','install','--package-lock-only','--ignore-scripts'], cwd=root, check=True)
+subprocess.run(['node', 'scripts/verify-portable-lock.mjs'], cwd=root, check=True)
 print('Applied locally. Review git diff, npm ci, typecheck, tests and build before committing. Nothing was pushed.')
