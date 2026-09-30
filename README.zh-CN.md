@@ -9,7 +9,7 @@
 [English](README.md) · **简体中文**
 
 [![下载 ZIP · 手动安装](https://img.shields.io/badge/下载_ZIP-手动安装-6D4AFF?style=for-the-badge)](https://github.com/CharlexH/pixondeck-extension/releases/download/v1.1.0/pixondeck-chrome-1.1.0-manual-install.zip)
-[![Chrome 商店 · 尚未上架](https://img.shields.io/badge/Chrome_商店-尚未上架-64748B?style=for-the-badge)](#chrome-商店)
+[![Chrome 商店 · 安装](https://img.shields.io/badge/Chrome_商店-安装-6D4AFF?style=for-the-badge)](https://chromewebstore.google.com/detail/abghgbjbefmiakmklkkoabgbeengkkgd)
 [![访问 PixOnDeck](https://img.shields.io/badge/访问-PixOnDeck-18181B?style=for-the-badge)](https://pixondeck.com/extension?utm_source=github&utm_medium=referral&utm_campaign=extension_open_source&utm_content=readme_zh_website)
 
 选取图片 → 反推提示词 → 一键带到 **ChatGPT 或 PixOnDeck** 生成。
@@ -20,7 +20,7 @@
 
 *操作演示动图 · 点击查看 MP4。*
 
-> **目前请使用手动安装。** Chrome 商店版本尚未上架。下载上方已打包的 ZIP 即可，不需要 Node.js、终端或自行编译。
+> **[从 Chrome 商店安装](https://chromewebstore.google.com/detail/abghgbjbefmiakmklkkoabgbeengkkgd)**，也可使用手动安装 ZIP。商店当前公开版本为 **1.0.1**；**1.1.0 正在审核**，目前可从这里下载 ZIP 手动安装。两种安装方式均不需要 Node.js、终端或自行编译。
 
 [安装步骤](#手动安装) · [第一次反推](#开始第一次反推) · [更新与排错](#更新与常见问题) · [隐私说明](#隐私与权限) · [开发者说明](#开发者说明)
 
@@ -110,7 +110,7 @@ BYOK 在账号菜单里配置。反推结果是 AI 对图片的理解，不能�
 
 ## Chrome 商店
 
-**尚未公开上架，敬请期待。** 顶部商店按钮目前指向此说明，上架后会替换为正式商店链接。现在请使用手动安装包，也可到[官网插件页](https://pixondeck.com/extension?utm_source=github&utm_medium=referral&utm_campaign=extension_open_source&utm_content=zh_store_status)查看产品动态。
+**[前往 Chrome 商店安装 PixOnDeck](https://chromewebstore.google.com/detail/abghgbjbefmiakmklkkoabgbeengkkgd)。** 商店当前公开版本为 **1.0.1**。**1.1.0 正在商店审核**，如需立即使用新功能，请按[手动安装步骤](#手动安装)下载 ZIP；最新审核通过的版本以商店页面为准。
 
 ## 更新与常见问题
 

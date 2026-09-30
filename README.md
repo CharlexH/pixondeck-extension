@@ -9,7 +9,7 @@
 **English** · [简体中文](README.zh-CN.md)
 
 [![Download ZIP](https://img.shields.io/badge/Download_ZIP-Manual_install-6D4AFF?style=for-the-badge)](https://github.com/CharlexH/pixondeck-extension/releases/download/v1.1.0/pixondeck-chrome-1.1.0-manual-install.zip)
-[![Chrome Web Store — coming soon](https://img.shields.io/badge/Chrome_Web_Store-Coming_soon-64748B?style=for-the-badge)](#chrome-web-store)
+[![Install from Chrome Web Store](https://img.shields.io/badge/Chrome_Web_Store-Install-6D4AFF?style=for-the-badge)](https://chromewebstore.google.com/detail/abghgbjbefmiakmklkkoabgbeengkkgd)
 [![Website](https://img.shields.io/badge/Visit-PixOnDeck-18181B?style=for-the-badge)](https://pixondeck.com/extension?utm_source=github&utm_medium=referral&utm_campaign=extension_open_source&utm_content=readme_website)
 
 Pick an image → Get a prompt → Generate in **ChatGPT or PixOnDeck**.
@@ -20,7 +20,7 @@ Pick an image → Get a prompt → Generate in **ChatGPT or PixOnDeck**.
 
 *Workflow animation · Click to view the MP4.*
 
-> **Install manually for now.** The Chrome Web Store version is not available yet. Download the prepared ZIP above; no Node.js, terminal or build step is required.
+> **[Install from the Chrome Web Store](https://chromewebstore.google.com/detail/abghgbjbefmiakmklkkoabgbeengkkgd)** or use the manual-install ZIP. The store currently offers **1.0.1**; **1.1.0 is pending review** and is available here as a manual-install ZIP. Neither installation method requires Node.js, a terminal or building from source.
 
 [Installation](#manual-installation) · [First prompt](#create-your-first-prompt) · [Updates & help](#updates-and-troubleshooting) · [Privacy](#privacy-and-permissions) · [Developers](#for-developers)
 
@@ -110,7 +110,7 @@ Local pose recognition does not consume PixOnDeck credits. Model weights are dow
 
 ## Chrome Web Store
 
-**Coming soon — not publicly available yet.** The button above points here until a public listing is available. Use the manual-install ZIP in the meantime. Check the [official extension page](https://pixondeck.com/extension?utm_source=github&utm_medium=referral&utm_campaign=extension_open_source&utm_content=store_status) for product updates.
+**[Install PixOnDeck from the Chrome Web Store](https://chromewebstore.google.com/detail/abghgbjbefmiakmklkkoabgbeengkkgd).** The published store version is **1.0.1**. Version **1.1.0 is pending store review**; to use its new features now, follow the [manual installation steps](#manual-installation). Check the store listing for the latest approved version.
 
 ## Updates and troubleshooting
 
