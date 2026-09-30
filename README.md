@@ -36,6 +36,10 @@ Portraits, beauty products, and ecommerce photography. Real stock photos with ac
   </tr>
 </table>
 
+[![PixOnDeck store promotional image](docs/store-assets/promo-marquee-1400x560.png)](docs/store-assets/README.md)
+
+*Current store visuals · AI-generated fictional portrait and current image-action icon.*
+
 ## Product screenshots
 
 Actual client UI replaying the example prompts above. Account and favorites are local demo states. Click an image to enlarge.

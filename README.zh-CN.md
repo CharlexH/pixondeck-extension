@@ -36,6 +36,10 @@
   </tr>
 </table>
 
+[![PixOnDeck 最新商店宣传图](docs/store-assets/promo-marquee-1400x560.png)](docs/store-assets/README.md)
+
+*最新商店素材 · AI 生成的虚构人像与当前图片操作图标。*
+
 ## 产品界面
 
 实际客户端界面，回放上述图片的反推结果；账号和收藏使用本地演示状态。点击图片可放大。

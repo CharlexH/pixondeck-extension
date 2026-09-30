@@ -5,4 +5,6 @@ Captured from the unmodified extension client in a local preview at a 460 × 760
 - portrait-workspace.png: portrait prompt, recent photos, and ChatGPT / PixOnDeck generation buttons.
 - prompt-favorites.png: prompt favorites using the local fixture API.
 - byok.png: provider configuration with no API key entered.
-- walkthrough.gif: 12 fps GIF conversion of the existing 6-second [welcome animation](../../src/assets/welcome-demo.mp4), not a recording of a live model run.
+- walkthrough.gif (refreshed 2026-09-30 with the AI-generated fictional adult portrait and current image-action icon): 12 fps GIF conversion of the existing 6-second [welcome animation](../../src/assets/welcome-demo.mp4), not a recording of a live model run.
+
+Current marketing screenshots and top promotional tile: [store assets](../store-assets/README.md).
